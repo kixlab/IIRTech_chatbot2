@@ -142,6 +142,9 @@ class Chatbot extends React.Component {
   }
 
   handleClick(newMessage) {
+    fetch('/fetchMessage?text='+newMessage, {'Access-Control-Allow-Origin':'*'})
+      .then(res => res.json())
+      .then((result) => alert(result));
     const messageLog = this.state.messageLog.slice(0, this.state.messageLog.length);
     this.setState({
       messageLog: messageLog.concat([{
