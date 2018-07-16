@@ -8,6 +8,7 @@ import os, uuid
 STATIC_PATH = './backend/static/'
 
 lines = open(static('scenario.txt')).readlines()
+users = {}
 
 class Bot():
     def __init__(self):
@@ -33,16 +34,21 @@ def fetchMessage(request):
         return: JSON
 
             (str) text: message 
-            (int) type: 0 - initialize, 1 - question, 2 - normal message
+            (int) type: 0 - bot, 1 - question, 2 - user
             (int) success: 0 - fail, 1 - success
             (str) userid: id
 
     """
+
+    _text = str(request.GET['text'])
     _type = int(request.GET['type'])
+    _userid = str(request.GET['userid'])
+    _index = int(request.GET['index'])
     if _type == 0:
         bot = Bot()
         msg = bot.lines[bot.index]
         userid = bot.id
+        users[userid] = bot
         js = {
             "text": msg,
             "type": 0,
@@ -50,10 +56,23 @@ def fetchMessage(request):
             "userid": userid
         }
     elif _type == 1:
-        js = {}
+        print (_text)
+        msg = "Type of question received was %s" %_text
+        bot = users[_userid]
+        js = {
+            "text": msg,
+            "type": 1,
+            "success": 1,
+            "userid": userid
+        }
     else:
         msg = request.GET['text']
-        js = {}
+        js = {
+            "text": msg,
+            "type": 1,
+            "success": 1,
+            "userid": userid
+        }
     
     return HttpResponse(json.dumps(js), content_type="application/json")
 
