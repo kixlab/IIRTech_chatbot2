@@ -13,7 +13,7 @@ class Bot():
     def __init__(self):
         self.index = 0
         self.lines = lines
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
     
     def next_line(self):
         line = self.lines[self.index]
@@ -38,7 +38,7 @@ def fetchMessage(request):
             (str) userid: id
 
     """
-    _type = request.GET['type']
+    _type = int(request.GET['type'])
     if _type == 0:
         bot = Bot()
         msg = bot.lines[bot.index]
