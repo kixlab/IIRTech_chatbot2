@@ -76,9 +76,10 @@ def fetchMessage(request):
             _questiontype = _questionType[_index-1]
             q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
             q.save()
+            msg = bot.next_line()
             js = {
-                "text": 'Sorry, we cannot answer your question at the moment.',
-                "type": 1,
+                "text": msg,
+                "type": 0 if (bot.index-1)%2==0 else 2,
                 "success": 1,
                 "userid": _userid
             }
