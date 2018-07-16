@@ -39,7 +39,6 @@ def fetchMessage(request):
             (str) userid: id
 
     """
-
     _text = str(request.GET['text'])
     _type = int(request.GET['type'])
     _userid = str(request.GET['userid'])
@@ -47,13 +46,13 @@ def fetchMessage(request):
     if _type == 0:
         bot = Bot()
         msg = bot.lines[bot.index]
-        userid = bot.id
-        users[userid] = bot
+        _userid = bot.id
+        users[_.userid] = bot
         js = {
             "text": msg,
             "type": 0,
             "success": 1,
-            "userid": userid
+            "userid": _userid
         }
     elif _type == 1:
         print (_text)
@@ -63,7 +62,7 @@ def fetchMessage(request):
             "text": msg,
             "type": 1,
             "success": 1,
-            "userid": userid
+            "userid": _userid
         }
     else:
         msg = request.GET['text']

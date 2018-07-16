@@ -148,12 +148,12 @@ class Chatbot extends React.Component {
   componentDidMount() {
     if (!this.state.initialized) {
       this.setState({initialized: true});
-      this.sendPOSTMessage('initialize', 0, -1);
+      this.sendPOSTMessage('initialize', 0, -1, '');
     }
   }
 
-  sendPOSTMessage(text, type, index) {
-    fetch('/fetchMessage?text=' + text + "&type=" + type + "&index=" + index, {'Access-Control-Allow-Origin':'*'})
+  sendPOSTMessage(text, type, index, userid) {
+    fetch('/fetchMessage?text=' + text + "&type=" + type + "&index=" + index + "&userid=" + userid, {'Access-Control-Allow-Origin':'*'})
       .then(res => res.json())
       .then((result) =>
         (
@@ -188,7 +188,7 @@ class Chatbot extends React.Component {
       })
   }
   handleQuestion(question) {
-    this.sendPOSTMessage(question, 1, -1);
+    this.sendPOSTMessage(question, 1, -1, this.state.userid);
   }
 
   render() {
