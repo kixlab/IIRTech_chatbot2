@@ -58,7 +58,7 @@ def fetchMessage(request):
         }
     elif _type == 1:
         print (_text)
-        if _text.strip == '없음':
+        if _text.strip() == '없음':
             msg = bot.next_line()
             js = {
                 "text": msg,
