@@ -27,6 +27,7 @@ class Bot():
 # Create your views here.
 def fetchMessage(request):
     """
+    
         input: POST
 
             (str) text: message
