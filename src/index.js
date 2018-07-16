@@ -165,6 +165,7 @@ class Chatbot extends React.Component {
     this.sendPOSTMessage = this.sendPOSTMessage.bind(this);
     this.handleQuestion = this.handleQuestion.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
+    this.url = 'http://143.248.48.96:8000';
   }
 
   componentDidMount() {
@@ -175,7 +176,7 @@ class Chatbot extends React.Component {
   }
 
   sendPOSTMessage(text, type, index, userid) {
-    fetch('/fetchMessage?text=' + text + "&type=" + type + "&index=" + index + "&userid=" + userid, {'Access-Control-Allow-Origin':'*'})
+    fetch(this.url+'/fetchMessage?text=' + text + "&type=" + type + "&index=" + index + "&userid=" + userid, {'Access-Control-Allow-Origin':'*'})
       .then(res => res.json())
       .then((result) =>
         (
@@ -191,7 +192,7 @@ class Chatbot extends React.Component {
   }
   handleClick(newMessage) {
     const messageLog = this.state.messageLog.slice(0, this.state.messageLog.length);
-    fetch('/fetchMessage?text='+newMessage, {'Access-Control-Allow-Origin':'*'})
+    fetch(this.url+'/fetchMessage?text='+newMessage, {'Access-Control-Allow-Origin':'*'})
       .then(res => res.json())
       .then((result) => {
         console.log(result);
