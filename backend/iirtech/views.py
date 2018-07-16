@@ -42,12 +42,14 @@ def fetchMessage(request):
     _text = str(request.GET['text'])
     _type = int(request.GET['type'])
     _userid = str(request.GET['userid'])
+    if _userid:
+        bot = users[_userid]
     _index = int(request.GET['index'])
     if _type == 0:
         bot = Bot()
         msg = bot.lines[bot.index]
         _userid = bot.id
-        users[_.userid] = bot
+        users[_userid] = bot
         js = {
             "text": msg,
             "type": 0,
@@ -56,14 +58,23 @@ def fetchMessage(request):
         }
     elif _type == 1:
         print (_text)
-        msg = "Type of question received was %s" %_text
-        bot = users[_userid]
-        js = {
-            "text": msg,
-            "type": 1,
-            "success": 1,
-            "userid": _userid
-        }
+        if _text.strip == '없음':
+            msg = bot.next_line()
+            js = {
+                "text": msg,
+                "type": 2,
+                "success": 1,
+                "userid": _userid
+            }
+        else:
+            msg = "Type of question received was %s" %_text
+            js = {
+                "text": msg,
+                "type": 1,
+                "success": 1,
+                "userid": _userid
+            }
+        
     else:
         msg = request.GET['text']
         js = {
