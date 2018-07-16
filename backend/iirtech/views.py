@@ -62,7 +62,7 @@ def fetchMessage(request):
             msg = bot.next_line()
             js = {
                 "text": msg,
-                "type": (bot.index-1)%2,
+                "type": 0 if (bot.index-1)%2==0 else 2,
                 "success": 1,
                 "userid": _userid
             }
