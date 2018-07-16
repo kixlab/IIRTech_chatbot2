@@ -9,7 +9,7 @@ class QuestionPrompt extends React.Component {
   // }
   render(){
     return(
-      <div style={{display: this.props.show ? 'block' : 'none'}}>
+      <div style={{display: this.props.show ? 'block' : 'none', clear:'both'}}>
         <div className="questionText">위 문장에서 특정 유형의 질문이 있으신가요?</div>
         <div style={{textAlign:'center'}}>
             <ol className="questionList">
