@@ -165,7 +165,7 @@ class Chatbot extends React.Component {
     this.sendPOSTMessage = this.sendPOSTMessage.bind(this);
     this.handleQuestion = this.handleQuestion.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
-    this.url = 'http://143.248.48.96:8000';
+    this.url = 'http://192.168.10.102:8000';
   }
 
   componentDidMount() {

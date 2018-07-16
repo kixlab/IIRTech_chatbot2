@@ -20,7 +20,6 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
-        re_path('.*', TemplateView.as_view(template_name='index.html')),
     url('', include('iirtech.urls')),
     path('admin/', admin.site.urls),
 ]
