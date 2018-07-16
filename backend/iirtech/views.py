@@ -12,7 +12,7 @@ users = {}
 
 class Bot():
     def __init__(self):
-        self.index = 0
+        self.index = 1
         self.lines = lines
         self.id = str(uuid.uuid4())
     
@@ -62,7 +62,7 @@ def fetchMessage(request):
             msg = bot.next_line()
             js = {
                 "text": msg,
-                "type": 2,
+                "type": (bot.index-1)%2,
                 "success": 1,
                 "userid": _userid
             }
