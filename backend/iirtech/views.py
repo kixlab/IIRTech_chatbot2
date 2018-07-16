@@ -15,19 +15,19 @@ class Bot():
         self.index = 1
         self.lines = lines
         self.id = str(uuid.uuid4())
-    
+
     def next_line(self):
         line = self.lines[self.index]
         self.index += 1
         return line
-    
+
     def current_line(self):
         return self.lines[self.index]
 
 # Create your views here.
 def fetchMessage(request):
     """
-    
+
         input: POST
 
             (str) text: message
@@ -37,7 +37,7 @@ def fetchMessage(request):
 
         return: JSON
 
-            (str) text: message 
+            (str) text: message
             (int) type: 0 - bot, 1 - question, 2 - user
             (int) success: 0 - fail, 1 - success
             (str) userid: id
@@ -74,7 +74,7 @@ def fetchMessage(request):
             line = bot.current_line()
             words = line.split()
             word = words[int(_text)]
-            _questiontype = _questionType[_index-1]
+            _questiontype = _index-1
             q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
             q.save()
             msg = bot.next_line()
@@ -92,7 +92,7 @@ def fetchMessage(request):
             "success": 1,
             "userid": userid
         }
-    
+
     return HttpResponse(json.dumps(js), content_type="application/json")
 
 def returnQuestion(request):
