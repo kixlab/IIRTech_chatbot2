@@ -5,8 +5,15 @@ import QuestionPrompt from './QuestionPrompt.js';
 
 class Message extends React.Component {
   render() {
-    const type = this.props.type ? "userMsg" : "botMsg";
-    const msgHead = this.props.type ? "User" : "Bot";
+    var type, msgHead;
+    if (this.props.type == 2) {
+      type = "userMsg";
+      msgHead = "User";
+    }
+    else if (this.props.type == 0){
+      type = "botMsg";
+      msgHead = "Bot";
+    }
     return (
       <div className={type+"Container"}>
         <div className={type+"Header"}>{msgHead}</div>
@@ -32,8 +39,8 @@ class MessageBox extends React.Component {
   render() {
     const messageList = this.props.log.map((message, index) => {
       return (
-        <div>
-          <Message key={index}
+        <div key={index}>
+          <Message
             type={message.type}
             msg={message.message}
           />
@@ -44,7 +51,7 @@ class MessageBox extends React.Component {
     return(
       <div className="messageBox">
         {messageList}
-        <QuestionPrompt />
+        <QuestionPrompt onQuestionClick={this.props.onQuestionClick}/>
         <div ref={el => { this.el = el; }} />
       </div>
     );
@@ -132,16 +139,31 @@ class Chatbot extends React.Component {
     this.state = {
       messageLog: [],
       initialized: false,
+      userid: '',
     };
     this.sendPOSTMessage = this.sendPOSTMessage.bind(this);
+    this.handleQuestion = this.handleQuestion.bind(this);
   }
-  sendPOSTMessage(text, type, index) {
 
+  componentDidMount() {
+    if (!this.state.initialized) {
+      this.setState({initialized: true});
+      this.sendPOSTMessage('initialize', 0, -1);
+    }
+  }
+
+  sendPOSTMessage(text, type, index) {
     fetch('/fetchMessage?text=' + text + "&type=" + type + "&index=" + index, {'Access-Control-Allow-Origin':'*'})
       .then(res => res.json())
       .then((result) =>
         (
-          result['success'] ? addToMessageLog : null
+          result['success'] ? this.setState({
+            messageLog: this.state.messageLog.slice(0, this.state.messageLog.length).concat([{
+              type:result['type'],
+              message: result['text']
+          }]),
+          userid: result['userid'],
+        }) : null
         )
       )
   }
@@ -160,20 +182,19 @@ class Chatbot extends React.Component {
       })
       this.setState({
         messageLog: this.state.messageLog.slice(0, this.state.messageLog.length).concat([{
-          type: 1,
+          type: 2,
           message: newMessage,
         }])
       })
   }
+  handleQuestion(question) {
+    this.sendPOSTMessage(question, 1, -1);
+  }
 
   render() {
-    if (!this.state.initialized) {
-      this.setState({initialized: true});
-      this.sendPOSTMessage('initialize', 0, -1, '');
-    }
     return (
       <div className="chatbot">
-        <MessageBox log={this.state.messageLog} />
+        <MessageBox onQuestionClick={this.handleQuestion} log={this.state.messageLog} />
         <InputBox onClick={(newMessage) => this.handleClick(newMessage)}/>
       </div>
     );
