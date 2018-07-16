@@ -12,7 +12,7 @@ users = {}
 
 class Bot():
     def __init__(self):
-        self.index = 0
+        self.index = 1
         self.lines = lines
         self.id = str(uuid.uuid4())
     
@@ -20,15 +20,19 @@ class Bot():
         line = self.lines[self.index]
         self.index += 1
         return line
+    
+    def current_line(self):
+        return self.lines[self.index]
 
 # Create your views here.
 def fetchMessage(request):
     """
+    
         input: POST
 
             (str) text: message
             (int) type: 0 - initialize, 1 - question, 2 - normal message
-            (int) index: -1 - initialize and question type, 0 - normal message
+            (int) index: -1 - initialize, 0 - normal message, 1 - 어휘, 2 - 문법, 3 - 발음, 4 - 기타
             (str) userid: id
 
         return: JSON
@@ -57,24 +61,29 @@ def fetchMessage(request):
             "userid": _userid
         }
     elif _type == 1:
-        print (_text)
-        if _text.strip == '없음':
+        if '없음' in _text.strip():
             msg = bot.next_line()
             js = {
                 "text": msg,
-                "type": 2,
+                "type": 0 if (bot.index-1)%2==0 else 2,
                 "success": 1,
                 "userid": _userid
             }
         else:
-            msg = "Type of question received was %s" %_text
+            _questionType = ["어휘","문법","발음","기타"]
+            line = bot.current_line()
+            words = line.split()
+            word = words[int(_text)]
+            _questiontype = _questionType[_index-1]
+            q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
+            q.save()
+            msg = bot.next_line()
             js = {
                 "text": msg,
-                "type": 1,
+                "type": 0 if (bot.index-1)%2==0 else 2,
                 "success": 1,
                 "userid": _userid
             }
-        
     else:
         msg = request.GET['text']
         js = {
