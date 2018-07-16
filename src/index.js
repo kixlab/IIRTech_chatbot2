@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import QuestionPrompt from './QuestionPrompt.js';
 
 class Message extends React.Component {
   render() {
@@ -31,15 +32,19 @@ class MessageBox extends React.Component {
   render() {
     const messageList = this.props.log.map((message, index) => {
       return (
-        <Message key={index}
-          type={message.type}
-          msg={message.message}
-        />
+        <div>
+          <Message key={index}
+            type={message.type}
+            msg={message.message}
+          />
+        </div>
+
       );
     });
     return(
       <div className="messageBox">
         {messageList}
+        <QuestionPrompt />
         <div ref={el => { this.el = el; }} />
       </div>
     );
@@ -125,22 +130,19 @@ class Chatbot extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageLog: [{
-        type: 0,
-        message: "Hello! Welcome to chatbot! :|] BlahblahblahblahblahblahblahblahblahblahblahblahblahblahBlahblahblahblahblahblahblahblahblahblahblahblahblahblah",
-      },
-      {
-        type: 1,
-        message: "I am a user! Blahblahblahblahblahblahblahblahblahblahblahblahblahblah",
-      },
-      {
-        type: 1,
-        message: "I am a user! BlahblahblahblahblahblahblahblahblahblahblahblahblahblahBlahblahblahblahblahblahblahblahblahblahblahblahblahblah",
-      }
-    ],
+      messageLog: [],
+      initialized: false,
     };
+    this.sendPOSTMessage = this.sendPOSTMessage.bind(this);
   }
+  sendPOSTMessage(text, type, index) {
 
+    fetch('/fetchMessage?text=' + text + "&type=" + type + "&index=" + index, {'Access-Control-Allow-Origin':'*'})
+      .then(res => res.json())
+      .then((result) =>
+        (console.log(result['text']))
+      )
+  }
   handleClick(newMessage) {
     const messageLog = this.state.messageLog.slice(0, this.state.messageLog.length);
     fetch('/fetchMessage?text='+newMessage, {'Access-Control-Allow-Origin':'*'})
@@ -163,6 +165,10 @@ class Chatbot extends React.Component {
   }
 
   render() {
+    if (!this.state.initialized) {
+      this.setState({initialized: true});
+      this.sendPOSTMessage('initialize', 0, -1, '');
+    }
     return (
       <div className="chatbot">
         <MessageBox log={this.state.messageLog} />
