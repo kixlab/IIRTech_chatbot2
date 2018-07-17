@@ -165,7 +165,7 @@ class Chatbot extends React.Component {
     this.sendPOSTMessage = this.sendPOSTMessage.bind(this);
     this.handleQuestion = this.handleQuestion.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
-    this.url = 'http://143.248.48.96:5000';
+    this.url = 'http://localhost:5000';
   }
 
   componentDidMount() {
@@ -213,7 +213,7 @@ class Chatbot extends React.Component {
 
   handleQuestion(question) {
     this.setState({
-      disabled: !this.state.disabled,
+      disabled: true,
     })
     const lastMsg = this.state.messageLog[this.state.messageLog.length-1]['message'];
     const splitMsg = lastMsg.split(" ").map((msg) => msg.trim());
@@ -229,6 +229,9 @@ class Chatbot extends React.Component {
       })
     }
     else {
+      this.setState({
+        disabled: false,
+      })
       this.sendPOSTMessage(question, 1, question, this.state.userid);
     }
 
