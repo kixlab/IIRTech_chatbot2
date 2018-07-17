@@ -228,6 +228,9 @@ class Chatbot extends React.Component {
 
       })
     }
+    else {
+      this.sendPOSTMessage(question, 1, question, this.state.userid);
+    }
 
     return <QuestionSelect questionOptions={splitMsg}/>
     //this.sendPOSTMessage(question, 1, -1, this.state.userid);

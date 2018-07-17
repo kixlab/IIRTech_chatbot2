@@ -61,7 +61,7 @@ def fetchMessage(request):
             "userid": _userid
         }
     elif _type == 1:
-        if '없음' in _text.strip():
+        if _index == 5:
             msg = bot.next_line()
             js = {
                 "text": msg,
