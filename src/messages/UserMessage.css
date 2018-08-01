@@ -1,0 +1,16 @@
+.usercontent{
+  background-color: rgb(252,227,77);
+  word-wrap: break-word;
+  border-radius: 5px;
+  text-align: right;
+}
+
+.userimage{
+    background-color: pink;
+    height:50px;
+}
+/*
+.userContentWrapper{
+  justify-content: flex-end;
+}
+*/
