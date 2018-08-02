@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Chatbot.css";
-import MessageBox from './MessageBox.js';
-import InputBox from './InputBox.js';
+import MessageBox from './MessageBox';
+import InputBox from './InputBox';
 
 class Chatbot extends React.Component {
   constructor(props) {
@@ -109,7 +109,7 @@ class Chatbot extends React.Component {
   render() {
     return (
       <div className="container chatbot">
-        <Messagebox messageLog={this.state.messageLog} />
+        <MessageBox messageLog={this.state.messageLog} />
         <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} />
       </div>
     )

@@ -1,8 +1,8 @@
 import React from 'react';
 import './Message.css';
-import BotMessage from './messages/BotMessage.js';
-import UserMessage from './messages/UserMessage.js';
-import SystemMessage from './messages/SystemMessage.js';
+import BotMessage from './messages/BotMessage';
+import UserMessage from './messages/UserMessage';
+import SystemMessage from './messages/SystemMessage';
 
 class Message extends React.Component {
   render() {
