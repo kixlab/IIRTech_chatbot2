@@ -1,15 +1,15 @@
 {
-  "name": "korean-chatbot",
+  "name": "bot-template",
   "version": "0.1.0",
+  "proxy":"http://localhost:8000",
   "private": true,
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4"
   },
-  "proxy": "http://localhost:8000",
   "scripts": {
-    "start": "PORT=8888 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

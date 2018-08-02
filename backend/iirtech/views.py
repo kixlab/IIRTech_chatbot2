@@ -12,13 +12,13 @@ users = {}
 
 class Bot():
     def __init__(self):
-        self.index = 1
+        self.index = 0
         self.lines = lines
         self.id = str(uuid.uuid4())
 
     def next_line(self):
+        self.index += 2
         line = self.lines[self.index]
-        self.index += 1
         return line
 
     def current_line(self):
@@ -28,7 +28,7 @@ class Bot():
 def fetchMessage(request):
     """
 
-        input: POST
+        input: GET
 
             (str) text: message
             (int) type: 0 - initialize, 1 - question, 2 - normal message
@@ -46,9 +46,8 @@ def fetchMessage(request):
     _text = str(request.GET['text'])
     _type = int(request.GET['type'])
     _userid = str(request.GET['userid'])
-    if _userid:
-        bot = users[_userid]
-    _index = int(request.GET['index'])
+    
+    # Initialize Bot
     if _type == 0:
         bot = Bot()
         msg = bot.lines[bot.index]
@@ -60,37 +59,33 @@ def fetchMessage(request):
             "success": 1,
             "userid": _userid
         }
-    elif _type == 1:
-        if _index == 5:
-            msg = bot.next_line()
-            js = {
-                "text": msg,
-                "type": 0 if (bot.index-1)%2==0 else 2,
-                "success": 1,
-                "userid": _userid
-            }
-        else:
-            _questionType = ["어휘","문법","발음","기타"]
-            line = bot.current_line()
-            words = line.split()
-            word = words[int(_text)]
-            _questiontype = _index-1
-            q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
-            q.save()
-            msg = bot.next_line()
-            js = {
-                "text": msg,
-                "type": 0 if (bot.index-1)%2==0 else 2,
-                "success": 1,
-                "userid": _userid
-            }
     else:
-        msg = request.GET['text']
+        bot = users[_userid]
+    
+    _index = int(request.GET['index'])
+        
+    if _type == 2:
+        _questionType = ["어휘","문법","발음","기타"]
+        line = bot.current_line()
+        words = line.split()
+        word = words[int(_text)]
+        _questiontype = _index-1
+        q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
+        q.save()
+        msg = bot.next_line()
         js = {
             "text": msg,
-            "type": 1,
+            "type": 0 if (bot.index-1)%2==0 else 2,
             "success": 1,
-            "userid": userid
+            "userid": _userid
+        }
+    elif _type == 1:
+        msg = bot.next_line()
+        js = {
+            "text": msg,
+            "type": 0,
+            "success": 1,
+            "userid": _userid
         }
 
     return HttpResponse(json.dumps(js), content_type="application/json")
@@ -100,11 +95,7 @@ def returnQuestion(request):
 
        input: JSON
 
-
-
        return: JSON
-
-
 
     """
 
