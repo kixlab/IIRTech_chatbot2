@@ -1,5 +1,8 @@
 # KIXLAB Chatbot Template
 
+This is the very early version of KIXLAB's internal chatbot template.
+It is based on React in the frontend and Django in the backend. Feel free to make updates, share new ideas, and find errors.
+
 ### Component Sturcture
 - Chatbot.jsx
   - MessageBox.jsx
@@ -34,5 +37,16 @@
   mv build/manifest.json static
   ```
 - Then open index.html in backend/build directory and reference static files (css, js, etc)
-- If everything is set, python manage.py runserver
+- If everything is ready
+  ```
+  python manage.py runserver
+  ```
 - For more information, refer to https://medium.com/@nicholaskajoh/heres-a-dead-simple-react-django-setup-for-your-next-project-c0b0036663c6
+
+### Quick Note
+
+#### Tested with Python v3.6.2
+#### If you are seeing any python ImportError, run the following 
+```
+pip install -r requirement.txt
+```
