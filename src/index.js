@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Chatbot from './Chatbot.js'
+import Chatbot from './Chatbot'
 
 ReactDOM.render(
   <Chatbot />,

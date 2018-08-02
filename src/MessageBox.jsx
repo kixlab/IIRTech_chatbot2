@@ -1,6 +1,6 @@
 import React from 'react';
-import './Messagebox.css';
-import Message from './Message.js'
+import './MessageBox.css';
+import Message from './Message'
 class MessageBox extends React.Component {
 
   render() {
