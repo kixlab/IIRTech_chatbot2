@@ -1,7 +1,7 @@
 import React from 'react';
-import './Inputbox.css'
+import './InputBox.css'
 
-class Inputbox extends React.Component {
+class InputBox extends React.Component {
   constructor(props){
     super(props);
     this.handleChange = this.handleChange.bind(this);
@@ -23,4 +23,4 @@ class Inputbox extends React.Component {
   }
 }
 
-export default Inputbox;
+export default InputBox;

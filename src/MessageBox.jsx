@@ -1,7 +1,7 @@
 import React from 'react';
 import './Messagebox.css';
 import Message from './Message.js'
-class Messagebox extends React.Component {
+class MessageBox extends React.Component {
 
   render() {
     const messageList = this.props.messageLog.map((message, index) => {
@@ -17,4 +17,4 @@ class Messagebox extends React.Component {
   }
 }
 
-export default Messagebox;
+export default MessageBox;
