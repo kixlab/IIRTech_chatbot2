@@ -108,7 +108,7 @@ class Chatbot extends React.Component {
 
   render() {
     return (
-      <div className="container chatbot">
+      <div className="container chatbot col-8">
         <MessageBox messageLog={this.state.messageLog} />
         <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} />
       </div>
