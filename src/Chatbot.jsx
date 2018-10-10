@@ -40,12 +40,34 @@ class Chatbot extends React.Component {
     const userid = response.userid;
     if (!success) return;
     if (!this.state.userid) this.setState({userid: userid});
-    this.appendMessage([
-      {
-        type: type,
-        content: text, // Sample user message
+    if (type === 3){ // Exit current session and print message
+      for(let i = 0; i < text.length; i++){
+        this.appendMessage([
+          {
+            type: 0,
+            content: text[i], // Sample user message
+          }
+        ])
       }
-    ])
+      this.appendMessage([
+        {
+          type: 2,
+          content: "This is the end of current conversation"
+        }
+      ])
+    }
+    else{
+      for(let i = 0; i < text.length; i++){
+        this.appendMessage([
+          {
+            type: type,
+            content: text[i], // Sample user message
+          }
+        ])
+      }
+      
+    }
+    
   }
 
   // Method to keep track of the current message in the textarea
