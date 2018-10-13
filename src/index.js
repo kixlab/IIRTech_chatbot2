@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Chatbot from './Chatbot'
+import MainScreen from './MainScreen'
 
 ReactDOM.render(
-  <Chatbot />,
+  <MainScreen />,
   document.getElementById('root')
 )
