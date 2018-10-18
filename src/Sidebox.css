@@ -2,3 +2,20 @@
     height: 100vh;
     background-color: rgb(255, 209, 219);
 }
+
+.table-wrapper {
+    margin-top: 16px !important;
+}
+
+.table-wrapper .table-title {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 2px;
+    text-decoration: underline;
+}
+
+.sidebox .table-wrapper .celled.table {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}

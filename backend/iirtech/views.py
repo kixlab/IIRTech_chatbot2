@@ -13,6 +13,7 @@ from . import korean_analyzer
 STATIC_PATH = './backend/static/'
 
 lines = open(static('sample_convo.txt')).readlines()
+# lines = open(static('scenario.txt')).readlines()
 users = {}
 
 class Bot():

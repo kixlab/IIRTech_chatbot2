@@ -1,0 +1,56 @@
+.btn-select {
+    width: 160px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.question {
+    font-size: 26px;
+    padding: 8px;
+}
+
+span.content {
+    font-weight: 600;
+    color: rgba(200,0,0,.9);
+}
+
+.question-container {
+    margin: 8px 0px;
+}
+
+.question-wrapper {
+    margin-bottom: 8px;
+    height: 30px;
+}
+
+.question-feedback {
+    font-size: 16px;
+    padding: 4px 0;
+    width: 300px;
+    margin: 8px auto;
+}
+
+.question-feedback.correct {
+    background: rgba(100,200,200,0.8);
+}
+
+.option-correct {
+    color: #fff;
+    font-weight: 600;
+}
+
+.question-feedback.wrong {
+    background: rgba(200,100,100,0.8);
+}
+
+.btn-active {
+    background: #00ABFF;
+}
+
+.btn-correct {
+    background: rgba(0,180,0,0.8)
+}
+
+.btn-wrong {
+    background: rgba(180,0,0,0.8)
+}
