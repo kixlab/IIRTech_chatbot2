@@ -19,7 +19,7 @@ class MainScreen extends React.Component {
     addVocab(korWord,engWord) {
         const newVocabList = this.state.vocabList.slice();
         newVocabList.push({'korWord':korWord, 'engWord': engWord});
-        this.setState({vocabList: newVocabList});
+        this.setState({vocabList: newVocabList}); 
     }
 
     onProceedHandler() {

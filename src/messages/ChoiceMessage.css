@@ -1,0 +1,9 @@
+.btn-select {
+    width: 160px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.btn-chosen {
+    background: rgba(0,180,0,0.8) !important
+}
