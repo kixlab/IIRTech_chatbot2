@@ -16,13 +16,13 @@ STATIC_PATH = './backend/static/'
 lines = open(static('sample_convo.txt')).readlines()
 # lines = open(static('scenario.txt')).readlines()
 users = {}
-
+bot_list = []
 class Bot():
     def __init__(self):
         self.index = 0
         self.lines = lines
         self.id = str(uuid.uuid4())
-        self.tense = 1
+        self.tense = None
 
     def next_line(self):
         self.index += 1
@@ -45,6 +45,17 @@ class Bot():
     def current_line(self):
         return self.lines[self.index]
 
+def chooseTense(request):
+    _tense = str(request.GET['tense'])
+    _userid = str(request.GET['userid'])
+    bot = users[_userid]
+    bot.tense = _tense
+    js = {
+        "tense": _tense
+    }
+    return HttpResponse(json.dumps(js), content_type="application/json")
+
+
 # Create your views here.
 def fetchMessage(request):
     """
@@ -59,7 +70,7 @@ def fetchMessage(request):
         return: JSON
 
             (str) text: list of messages
-            (int) type: 0 - bot, 1 - question, 2 - user
+            (int) type: 0 - bot, 1 - question, 2 - user, 3 - end, 4 - init
             (int) success: 0 - fail, 1 - success
             (str) userid: id
 
@@ -76,7 +87,7 @@ def fetchMessage(request):
         users[_userid] = bot
         js = {
             "text": msg,
-            "type": 0,
+            "type": 4,
             "success": 1,
             "userid": _userid
         }
@@ -164,9 +175,9 @@ def process_msg(msgs, choice):
             future = korean_parsing.make_future_guess(line_s)
         else: #의지 미래 시제
             future = korean_parsing.make_future_will(line_s)
-        if choice == 1:
+        if choice == 'p':
             processed.append(korean_parsing.make_past(line_s))
-        elif choice == 2:
+        elif choice == 'f':
             processed.append(future)
     return processed
 

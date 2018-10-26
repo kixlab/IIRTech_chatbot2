@@ -1,5 +1,6 @@
 import React from 'react';
 import './InputBox.css'
+import 'semantic-ui-css/semantic.min.css';
 
 class InputBox extends React.Component {
   constructor(props){
@@ -14,10 +15,16 @@ class InputBox extends React.Component {
   }
 
   render() {
+    const disabled = this.props.disabled
     return (
       <div className='inputBox row justify-content-between'>
         <textarea className="col-10 inputText align-self-end" value={this.props.newText} onChange={this.handleChange}/>
-        <input type="button" className="col-2 inputButton align-self-end" value="Send" onClick={() => this.props.handleClick(this.props.newText)}/>
+        {
+          disabled?
+            <button type="button" className={"col-2 inputButton align-self-end"} onClick={() => this.props.handleClick(this.props.newText)} disabled>Send</button> :
+            <button type="button" className={"col-2 inputButton align-self-end"} onClick={() => this.props.handleClick(this.props.newText)}>Send</button> 
+        }
+       
       </div>
     );
   }

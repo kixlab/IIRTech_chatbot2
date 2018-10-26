@@ -7,14 +7,19 @@ class Chatbot extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageLog: [{type: 2, content:"Please type a message to start."}],
+      messageLog: [],
       currentMessage: "",
-      userid: ''
+      userid: '',
+      tense: null,
+      buttonDisabled: true,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
+    this.handleTense = this.handleTense.bind(this)
+    this.handleTenseChoice = this.handleTenseChoice.bind(this)
+    this.chooseTense = this.chooseTense.bind(this)
   }
 
   componentDidMount() {
@@ -25,9 +30,23 @@ class Chatbot extends React.Component {
     this.sendMessage(text, type, index, userid);
   }
 
+  chooseTense(tense) {
+    fetch(`iirtech/chooseTense?tense=${tense}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+      .then(res => res.json())
+      .then(response => this.handleTense(response))
+  }
+
   sendMessage(text, type, index, userid) {
-    
     fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
+      .then(res => res.json())
+      .then(response => this.handleResponse(response))
+  }
+
+  handleTense(response) {
+    this.setState({
+      tense: response.tense
+    })
+    fetch(`iirtech/fetchMessage?text=${""}&type=${1}&index=${0}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleResponse(response))
   }
@@ -55,6 +74,31 @@ class Chatbot extends React.Component {
           content: "This is the end of current conversation"
         }
       ])
+      this.setState({
+        buttonDisabled: true,
+      })
+    }
+    else if(type === 4) {
+      for(let i = 0; i < text.length; i++){
+        this.appendMessage([
+          {
+            type: 0,
+            content: text[i], // Sample user message
+          }
+        ])
+      }
+      this.appendMessage([
+        {
+          type: 2,
+          content: "예, 아니오로 답해봅시다."
+        }
+      ])
+      this.appendMessage([
+        {
+          type:3,
+          content: ""
+        }
+      ])
     }
     else{
       for(let i = 0; i < text.length; i++){
@@ -67,7 +111,13 @@ class Chatbot extends React.Component {
       }
       
     }
-    
+  }
+
+  handleTenseChoice(tense) {
+    this.chooseTense(tense)
+    this.setState({
+      buttonDisabled: false,
+    })
   }
 
   // Method to keep track of the current message in the textarea
@@ -131,8 +181,8 @@ class Chatbot extends React.Component {
   render() {
     return (
       <div className="container chatbot col-8">
-        <MessageBox messageLog={this.state.messageLog} />
-        <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} />
+        <MessageBox messageLog={this.state.messageLog} handleClick={this.handleTenseChoice} done={this.state.tense!=null} chosen={this.state.tense=='p'?0:1}/>
+        <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} disabled={this.state.buttonDisabled}/>
       </div>
     )
   }
