@@ -16,25 +16,29 @@ class ActivityBox extends React.Component {
   }
 
   componentDidMount() {
-    const json = [
-        {
-            type: 'v',
-            lang: 'kor',
-            content: '영화관',
-            options: ['theater', 'shopping mall', 'sports complex'],
-            correct: 0,
-        },
-        {
-            type: 'v',
-            lang: 'kor',
-            content: '제목',
-            options: ['subtitle', 'title', 'actor'],
-            correct: 1,
-        }
-      ]
-      this.setState({
-          contents: json
-      })
+    fetch(`iirtech/fetchActivity`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => this.setState({contents:response['response']}))
+
+    // const json = [
+    //     {
+    //         type: 'v',
+    //         lang: 'kor',
+    //         content: '영화관',
+    //         options: ['theater', 'shopping mall', 'sports complex'],
+    //         correct: 0,
+    //     },
+    //     {
+    //         type: 'v',
+    //         lang: 'kor',
+    //         content: '제목',
+    //         options: ['subtitle', 'title', 'actor'],
+    //         correct: 1,
+    //     }
+    //   ]
+    //   this.setState({
+    //       contents: json
+    //   })
   }
 
   onCorrectHandler() {
@@ -45,7 +49,8 @@ class ActivityBox extends React.Component {
         const word2 = content['options'][content['correct']];
         if (content['lang'] === 'kor') addVocab(word1, word2)
         else addVocab(word2, word1);
-        if ( questionIndex < contents.length ) {
+        // if ( questionIndex < contents.length ) {
+        if ( questionIndex < 5 ) {
             const newQuestionIndex = questionIndex + 1;
             this.setState({questionIndex: newQuestionIndex})
         }

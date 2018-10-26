@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from iirtech.models import QuestionType
-import json
+import json, random
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import os, uuid
 import jpype
@@ -9,6 +9,7 @@ import jpype
 # Korean parser
 from . import korean_parsing
 from . import korean_analyzer
+from .vocab_extractor import extract_vocab
 
 STATIC_PATH = './backend/static/'
 
@@ -168,3 +169,23 @@ def process_msg(msgs, choice):
         elif choice == 2:
             processed.append(future)
     return processed
+
+def fetchActivity(request):
+    response = extract_vocab('../static/scenario.txt')
+    js = {'response': []}
+    for v in response['A']:
+        options = []
+        options.append(v[1])
+        while len(options)<3:
+            candidate = random.choice(response['translated'])
+            if candidate != v[1]:
+                options.append(candidate)
+        random.shuffle(options)
+        js['response'].append({
+            'type': 'v',
+            'lang': 'kor',
+            'content': v[0],
+            'options': options,
+            'correct': options.index(v[1]),
+        })
+    return HttpResponse(json.dumps(js), content_type="application/json")
