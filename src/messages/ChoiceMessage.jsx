@@ -3,10 +3,6 @@ import './ChoiceMessage.css';
 import 'semantic-ui-css/semantic.min.css';
 
 class ChoiceMessage extends React.Component {
-    constructor(props){
-        super(props);
-      }
-
     render() {
         const done = this.props.done;
         const chosen = this.props.chosen;
@@ -14,7 +10,7 @@ class ChoiceMessage extends React.Component {
         <div className="row justify-content-center">
             <button type="button" className={
                 done?
-                    chosen==0?
+                    chosen===0?
                     "btn btn-select btn-primary btn-chosen disabled"
                     :
                     "btn btn-select btn-primary disabled"
@@ -26,7 +22,7 @@ class ChoiceMessage extends React.Component {
             </button>
             <button type="button" className={
                 done?
-                    chosen==1?
+                    chosen===1?
                     "btn btn-select btn-primary btn-chosen disabled"
                     :
                     "btn btn-select btn-primary disabled"

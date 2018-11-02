@@ -10,6 +10,7 @@ import jpype
 from . import korean_parsing
 from . import korean_analyzer
 from .vocab_extractor import extract_vocab
+from .vocab_extractor import Papago
 
 STATIC_PATH = './backend/static/'
 
@@ -200,3 +201,12 @@ def fetchActivity(request):
             'correct': options.index(v[1]),
         })
     return HttpResponse(json.dumps(js), content_type="application/json")
+
+def translateToKorean(request):
+    _text = str(request.GET['text'])
+    translated = Papago('nmt', _text, 'ko')
+    js = {
+        'translatedText': translated,
+    }
+    return HttpResponse(json.dumps(js), content_type="application/json")
+    

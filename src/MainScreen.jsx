@@ -29,6 +29,7 @@ class MainScreen extends React.Component {
     render() {
         const { active, vocabList } = this.state;
         console.log(active);
+        const _active = true; // For debugging
         return (
             <div className="mainscreen row">
                 {active ? <Chatbot /> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
