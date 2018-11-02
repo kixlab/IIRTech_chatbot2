@@ -183,23 +183,57 @@ def process_msg(msgs, choice):
     return processed
 
 def fetchActivity(request):
-    response = extract_vocab('../static/scenario.txt')
+    response = extract_vocab('../static/sample_convo.txt')
     js = {'response': []}
+    random.shuffle(response['A'])
     for v in response['A']:
-        options = []
-        options.append(v[1])
-        while len(options)<3:
-            candidate = random.choice(response['translated'])
-            if candidate != v[1]:
-                options.append(candidate)
-        random.shuffle(options)
-        js['response'].append({
-            'type': 'v',
-            'lang': 'kor',
-            'content': v[0],
-            'options': options,
-            'correct': options.index(v[1]),
-        })
+        if len(v[0])>1:
+            options = []
+            options.append(v[1])
+            while len(options)<3:
+                candidate = random.choice(response['translated'])
+                if candidate != v[1]:
+                    options.append(candidate)
+            random.shuffle(options)
+            js['response'].append({
+                'type': 'v',
+                'lang': 'kor',
+                'content': v[0],
+                'options': options,
+                'correct': options.index(v[1]),
+            })
+    for v in response['B']:
+        if len(v[0])>1:
+            options = []
+            options.append(v[1])
+            while len(options)<3:
+                candidate = random.choice(response['translated'])
+                if candidate != v[1]:
+                    options.append(candidate)
+            random.shuffle(options)
+            js['response'].append({
+                'type': 'v',
+                'lang': 'kor',
+                'content': v[0],
+                'options': options,
+                'correct': options.index(v[1]),
+            })
+    for v in response['C']:
+        if len(v[0])>1:
+            options = []
+            options.append(v[1])
+            while len(options)<3:
+                candidate = random.choice(response['translated'])
+                if candidate != v[1]:
+                    options.append(candidate)
+            random.shuffle(options)
+            js['response'].append({
+                'type': 'v',
+                'lang': 'kor',
+                'content': v[0],
+                'options': options,
+                'correct': options.index(v[1]),
+            })
     return HttpResponse(json.dumps(js), content_type="application/json")
 
 def translateToKorean(request):
@@ -209,4 +243,3 @@ def translateToKorean(request):
         'translatedText': translated,
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
-    
