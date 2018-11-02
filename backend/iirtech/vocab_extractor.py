@@ -91,10 +91,11 @@ def extract_vocab(txtfile=static('scenario.txt')):
         vocab = set()
         for line in lines:
             for n in mecab.nouns(line):
-                vocab.add(n)
+               vocab.add(n)
 
         count = 0
         for v in vocab:
+            v = v.lower()
             translated = Papago('nmt',v,'ko')
             level = ''
             if v in vocab_by_level['A']:
