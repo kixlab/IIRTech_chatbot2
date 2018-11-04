@@ -12,7 +12,9 @@ class UserMessage extends React.Component {
             {this.props.content}
           </div>
         </div>
-        <div className="col-1 userimage align-self-start">Image</div>
+        <div className="col-1 userimage align-self-start">
+          <img src="/images/student.png" alt="student" />
+        </div>
       </div>
     )
   }

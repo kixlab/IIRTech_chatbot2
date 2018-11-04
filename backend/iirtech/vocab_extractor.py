@@ -69,7 +69,7 @@ def Papago(model, text, sl):
 mecab = Mecab()
 lines = []
 
-def extract_vocab(txtfile=static('scenario.txt')):
+def extract_vocab(txtfile=static('sample_convo.txt')):
     fname = os.path.basename(txtfile)
     filename, created = Filename.objects.get_or_create(
         filename=fname

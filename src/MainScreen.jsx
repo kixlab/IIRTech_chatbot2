@@ -11,9 +11,11 @@ class MainScreen extends React.Component {
         this.state = {
             active: false,
             vocabList: [],
+            highlightList: [],
         }
         this.addVocab = this.addVocab.bind(this);
         this.onProceedHandler = this.onProceedHandler.bind(this);
+        this.highlightHandler = this.highlightHandler.bind(this);
     }
 
     addVocab(korWord,engWord) {
@@ -26,14 +28,18 @@ class MainScreen extends React.Component {
         this.setState({active: true});
     }
 
+    highlightHandler(newHighlightList) {
+        this.setState({highlightList: newHighlightList});
+    }
+
     render() {
-        const { active, vocabList } = this.state;
+        const { active, vocabList, highlightList } = this.state;
         console.log(active);
         const _active = true; // For debugging
         return (
             <div className="mainscreen row">
-                {active ? <Chatbot /> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
-                <Sidebox vocabList={vocabList}/>
+                {active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
+                <Sidebox vocabList={vocabList} highlightList={highlightList}/>
             </div>
         )
     }

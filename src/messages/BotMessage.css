@@ -7,18 +7,23 @@
 }
 
 .botimage{
-    background-color: cyan;
+    /* background-color: cyan; */
     height:50px;
+    padding: 0;
 }
 
 .translatecontent{
-  background-color: lightgray;
+  background-color: rgb(218, 216, 219);
   word-wrap: break-word;
   border-radius: 5px;
   margin-bottom: 5px;
   display: inline-block;
 }
 
-.row{
-  
+img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }

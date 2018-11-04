@@ -35,7 +35,9 @@ class BotMessage extends React.Component {
     const translated = this.state.translated;
     return(
       <div className="row">
-        <div className="col-1 botimage align-self-start">Image</div>
+        <div className="col-1 botimage align-self-start">
+          <img src="/images/bot.png" alt="bot" />
+        </div>
         <div className="col-9 col-auto botContentWrapper">
           <div>{botName}</div>
           <div className="col-auto botcontent">

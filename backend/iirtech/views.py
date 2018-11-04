@@ -41,7 +41,11 @@ class Bot():
                 curr_line = self.lines[self.index]
             else:
                 line.append(False)
-        return line
+        if self.index < len(self.lines):
+            user_line = self.lines[self.index]
+        else:
+            user_line = ""
+        return line, user_line
 
     def current_line(self):
         return self.lines[self.index]
@@ -90,7 +94,8 @@ def fetchMessage(request):
             "text": msg,
             "type": 4,
             "success": 1,
-            "userid": _userid
+            "userid": _userid,
+            "nextline": "",
         }
     else:
         bot = users[_userid]
@@ -121,21 +126,23 @@ def fetchMessage(request):
                 "userid": _userid
             }
     elif _type == 1:
-        msg = bot.next_line()
+        msg, next_line = bot.next_line()
         msg = process_msg(msg, bot.tense)
         if msg[-1] == False:
             js = {
                 "text": msg[:-1],
                 "type": 3,
                 "success": 1,
-                "userid": _userid
+                "userid": _userid,
+                "nextline": next_line
             }
         else:
             js = {
                 "text": msg,
                 "type": 0,
                 "success": 1,
-                "userid": _userid
+                "userid": _userid,
+                "nextline": next_line
             }
 
     return HttpResponse(json.dumps(js), content_type="application/json")

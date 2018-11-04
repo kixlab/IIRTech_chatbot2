@@ -46,6 +46,24 @@ class Chatbot extends React.Component {
     this.setState({
       tense: response.tense
     })
+
+    if(response.tense === 'f') {
+      this.appendMessage([
+        {
+          type: 2,
+          content: "나중에 영화관에 갈 일에 관해 얘기해볼까요?"
+        }
+      ])
+    }
+    else {
+      this.appendMessage([
+        {
+          type: 2,
+          content: "영화관에 간 경험에 대해 얘기해봅시다."
+        }
+      ])
+    }
+
     fetch(`iirtech/fetchMessage?text=${""}&type=${1}&index=${0}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleResponse(response))
@@ -53,10 +71,28 @@ class Chatbot extends React.Component {
 
   handleResponse(response) {
     const text = response.text;
+    const userline = response.nextline;
     console.log(text)
     const type = parseInt(response.type,10);
     const success = parseInt(response.success,10);
     const userid = response.userid;
+    const vocabList = this.props.vocabList;
+    var highlightList =[];
+    var suggestMessage = "";
+
+    if (userline != "") {
+      console.log(userline)
+      for (var i = 0; i < vocabList.length; i++){
+        console.log(vocabList[i]['korWord'])
+        if (userline.includes(vocabList[i]['korWord'])){
+          highlightList.push(i);
+          suggestMessage += vocabList[i]['korWord'] + ', ';
+        }
+      }
+      suggestMessage = suggestMessage.substring(0, suggestMessage.length-2)
+    }
+    this.props.highlightHandler(highlightList)
+
     if (!success) return;
     if (!this.state.userid) this.setState({userid: userid});
     if (type === 3){ // Exit current session and print message
@@ -106,6 +142,14 @@ class Chatbot extends React.Component {
           {
             type: type,
             content: text[i], // Sample user message
+          }
+        ])
+      }
+      if (suggestMessage != ""){
+        this.appendMessage([
+          {
+            type: 2,
+            content: suggestMessage + " 단어를 쓸 수 있겠네요.",
           }
         ])
       }
