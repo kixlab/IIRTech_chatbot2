@@ -22,7 +22,7 @@ class MessageBox extends React.Component {
   render() {
     const messageList = this.props.messageLog.map((message, index) => {
       return (
-        <Message key={index} type={message.type} content={message.content} handleClick={this.props.handleClick} done={this.props.done} chosen={this.props.chosen}/>
+        <Message key={index} type={message.type} content={message.content} correct={message.correct} errNo={message.errNo} handleClick={this.props.handleClick} done={this.props.done} chosen={this.props.chosen} revise={this.props.revise}/>
       )
     })
     return (

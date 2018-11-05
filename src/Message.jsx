@@ -9,6 +9,9 @@ class Message extends React.Component {
   render() {
     const type = this.props.type;
     const content = this.props.content;
+    const correct = this.props.correct;
+    const revise = this.props.revise;
+    const errNo = this.props.errNo;
     if(type === 0) {
       return (
         <div className="container messageWrapper">
@@ -19,7 +22,7 @@ class Message extends React.Component {
     else if(type === 1) {
       return (
         <div className="container messageWrapper">
-          <UserMessage content={content}/>
+          <UserMessage content={content} revise={revise} correct={correct} errNo={errNo}/>
         </div>
       )
     }

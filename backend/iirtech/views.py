@@ -12,6 +12,8 @@ from . import korean_analyzer
 from .vocab_extractor import extract_vocab
 from .vocab_extractor import Papago
 
+from .hanspell import spell_checker
+
 STATIC_PATH = './backend/static/'
 
 lines = open(static('sample_convo.txt')).readlines()
@@ -96,6 +98,7 @@ def fetchMessage(request):
             "success": 1,
             "userid": _userid,
             "nextline": "",
+            "original": _text,
         }
     else:
         bot = users[_userid]
@@ -126,6 +129,22 @@ def fetchMessage(request):
                 "userid": _userid
             }
     elif _type == 1:
+        corrected_result = spell_checker.check(_text).as_dict()
+        num_errors = corrected_result['errors']
+        correct_sent = []
+
+        for x in corrected_result['words']:
+            correct_sent.append((x, corrected_result['words'][x]))
+            # if corrected_result['words'][x] == 0:
+            #     correct_sent += "<span>" + x + " </span>"
+            # elif corrected_result['words'][x] == 1:
+            #     correct_sent += "<span className='redFont'>" + x + " </span>"
+            # elif corrected_result['words'][x] == 2:
+            #     correct_sent += "<span className='greenFont'>" + x + " </span>"
+            # elif corrected_result['words'][x] == 3:
+            #     correct_sent += "<span className='purpleFont'>" + x + " </span>"
+            # elif corrected_result['words'][x] == 4:
+            #     correct_sent += "<span className='blueFont'>" + x + " </span>"
         msg, next_line = bot.next_line()
         msg = process_msg(msg, bot.tense)
         if msg[-1] == False:
@@ -134,7 +153,10 @@ def fetchMessage(request):
                 "type": 3,
                 "success": 1,
                 "userid": _userid,
-                "nextline": next_line
+                "nextline": next_line,
+                "original": _text,
+                "errorcount": num_errors,
+                "corrected": correct_sent,
             }
         else:
             js = {
@@ -142,7 +164,10 @@ def fetchMessage(request):
                 "type": 0,
                 "success": 1,
                 "userid": _userid,
-                "nextline": next_line
+                "nextline": next_line,
+                "original": _text,
+                "errorcount": num_errors,
+                "corrected": correct_sent,
             }
 
     return HttpResponse(json.dumps(js), content_type="application/json")

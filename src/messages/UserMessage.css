@@ -3,6 +3,8 @@
   word-wrap: break-word;
   border-radius: 5px;
   text-align: right;
+  clear: right;
+  margin-bottom: 5px;
 }
 
 .userimage{
@@ -20,4 +22,17 @@ img {
   max-height: 100%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.redFont{
+  color: red;
+}
+.greenFont{
+  color: green;
+}
+.purpleFont{
+  color: purple;
+}
+.blueFont{
+  color: blue;
 }

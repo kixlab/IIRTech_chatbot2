@@ -38,7 +38,7 @@ class MainScreen extends React.Component {
         const _active = true; // For debugging
         return (
             <div className="mainscreen row">
-                {active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
+                {_active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
                 <Sidebox vocabList={vocabList} highlightList={highlightList}/>
             </div>
         )

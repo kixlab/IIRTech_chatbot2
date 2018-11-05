@@ -12,6 +12,7 @@ class Chatbot extends React.Component {
       userid: '',
       tense: null,
       buttonDisabled: true,
+      revise: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -70,20 +71,21 @@ class Chatbot extends React.Component {
   }
 
   handleResponse(response) {
+    const original = response.original
     const text = response.text;
     const userline = response.nextline;
-    console.log(text)
     const type = parseInt(response.type,10);
     const success = parseInt(response.success,10);
     const userid = response.userid;
+    const errNum = parseInt(response.errorcount,10);
+    const correctText = response.corrected;
     const vocabList = this.props.vocabList;
+    
     var highlightList =[];
     var suggestMessage = "";
 
     if (userline != "") {
-      console.log(userline)
       for (var i = 0; i < vocabList.length; i++){
-        console.log(vocabList[i]['korWord'])
         if (userline.includes(vocabList[i]['korWord'])){
           highlightList.push(i);
           suggestMessage += vocabList[i]['korWord'] + ', ';
@@ -96,11 +98,21 @@ class Chatbot extends React.Component {
     if (!success) return;
     if (!this.state.userid) this.setState({userid: userid});
     if (type === 3){ // Exit current session and print message
+      if (original != ""){
+        this.appendMessage([
+          {
+            type: 1,
+            content: original,
+            correct: correctText,
+            errNo: errNum,
+          }
+        ])
+      }
       for(let i = 0; i < text.length; i++){
         this.appendMessage([
           {
             type: 0,
-            content: text[i], // Sample user message
+            content: text[i],
           }
         ])
       }
@@ -112,6 +124,7 @@ class Chatbot extends React.Component {
       ])
       this.setState({
         buttonDisabled: true,
+        revise: true,
       })
     }
     else if(type === 4) {
@@ -119,7 +132,7 @@ class Chatbot extends React.Component {
         this.appendMessage([
           {
             type: 0,
-            content: text[i], // Sample user message
+            content: text[i],
           }
         ])
       }
@@ -137,11 +150,21 @@ class Chatbot extends React.Component {
       ])
     }
     else{
+      if (original != ""){
+        this.appendMessage([
+          {
+            type: 1,
+            content: original,
+            correct: correctText,
+            errNo: errNum,
+          }
+        ])
+      }
       for(let i = 0; i < text.length; i++){
         this.appendMessage([
           {
             type: type,
-            content: text[i], // Sample user message
+            content: text[i],
           }
         ])
       }
@@ -153,7 +176,6 @@ class Chatbot extends React.Component {
           }
         ])
       }
-      
     }
   }
 
@@ -182,7 +204,6 @@ class Chatbot extends React.Component {
     // 
     // e.g. [{type: 1, content: 'hello'},]
     for (let i=0; i<msg.length; i++) {
-      console.log(msg[i])
       this.setState({
         messageLog: this.state.messageLog.slice().concat(msg[i])
       })
@@ -208,24 +229,13 @@ class Chatbot extends React.Component {
       const index = 0;
       const userid = this.state.userid;
       this.sendMessage(text, type, index, userid);
-
-      this.appendMessage([
-        {
-          type: 1,
-          content: newMessage, // Sample user message
-        },
-        // {
-        //   type: 0,
-        //   content: `I received "${newMessage}"`
-        // }
-      ])
     }
   }
 
   render() {
     return (
       <div className="container chatbot col-8">
-        <MessageBox messageLog={this.state.messageLog} handleClick={this.handleTenseChoice} done={this.state.tense!=null} chosen={this.state.tense==='p'?0:1}/>
+        <MessageBox messageLog={this.state.messageLog} handleClick={this.handleTenseChoice} done={this.state.tense!=null} chosen={this.state.tense==='p'?0:1} revise={this.state.revise}/>
         <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} disabled={this.state.buttonDisabled}/>
       </div>
     )
