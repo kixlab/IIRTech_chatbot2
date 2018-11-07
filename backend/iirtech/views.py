@@ -204,6 +204,7 @@ def process_msg(msgs, choice):
             processed.append(line_s[1:-1])
             continue
         # print(line_s[1:])
+
         if 'g' in tags: #추측 미래 시제
             future = korean_parsing.make_future_guess(line_s)
         else: #의지 미래 시제

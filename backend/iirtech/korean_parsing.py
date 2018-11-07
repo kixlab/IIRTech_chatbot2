@@ -282,7 +282,7 @@ def make_future_guess(sentence):
                 elif new_sent[-2][-1] == '되':
                     new_sent[-2] = new_sent[-2][:-1] + '돼'
                     new_sent[-1] = new_sent[-1][1:]
-                    
+
     last_idx = detect_last_verb(sentence)
     
     if last_idx == None:

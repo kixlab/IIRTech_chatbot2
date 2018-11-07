@@ -61,10 +61,10 @@ typings/
 .next
 
 __pycache/
-static/
+# static/
 
 *.mp4
-*.png
+# *.png
 .DS_Store
 *.pyc
 *.csv

@@ -35,10 +35,10 @@ class MainScreen extends React.Component {
     render() {
         const { active, vocabList, highlightList } = this.state;
         console.log(active);
-        const _active = true; // For debugging
+        // const _active = true; // For debugging
         return (
             <div className="mainscreen row">
-                {_active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
+                {active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
                 <Sidebox vocabList={vocabList} highlightList={highlightList}/>
             </div>
         )
