@@ -172,7 +172,7 @@ class Chatbot extends React.Component {
         this.appendMessage([
           {
             type: 2,
-            content: suggestMessage + " 단어를 쓸 수 있겠네요.",
+            content: suggestMessage + " 단어를 써볼까요?.",
           }
         ])
       }
