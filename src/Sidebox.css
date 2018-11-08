@@ -19,3 +19,26 @@
     margin: auto;
     text-align: center;
 }
+
+.vocab-list{
+    height: 80%;
+    overflow: auto;
+}
+
+/* .correction-guide {
+    position: fixed; 
+    bottom: 16px;
+} */
+
+.spelling{
+    color: red;
+}
+.spacing{
+    color: green;
+}
+.incorrect-vocab{
+    color: purple;
+}
+.statistical-correction{
+    color: blue;
+}

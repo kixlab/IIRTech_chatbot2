@@ -67,7 +67,8 @@ def chooseTense(request):
     bot = users[_userid]
     bot.tense = _tense
     js = {
-        "tense": _tense
+        "tense": _tense,
+        "guidemsg": bot.lines[bot.index+1],
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
 

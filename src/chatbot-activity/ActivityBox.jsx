@@ -23,6 +23,7 @@ class ActivityBox extends React.Component {
 
   componentDidUpdate() {
     this.scrollToBottom();
+    console.log("Activity updated!")
   }
 
 
@@ -75,7 +76,7 @@ class ActivityBox extends React.Component {
     const { contents, questionIndex, done, loading } = this.state; 
     const { onProceedHandler } = this.props;
     return (
-        <div className="container chatbot col-8">
+        <div className="container chatbot col-8 activitybox">
             {
                 loading ?
                 <Dimmer active>
@@ -99,6 +100,7 @@ class ActivityBox extends React.Component {
                                 options={contents[index]['options']}
                                 correct={contents[index]['correct']}
                                 onCorrectHandler={this.onCorrectHandler}
+                                messagesEnd={this.messagesEnd}
                             />
                     ))
                     }

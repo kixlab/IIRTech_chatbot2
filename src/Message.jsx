@@ -12,6 +12,7 @@ class Message extends React.Component {
     const correct = this.props.correct;
     const revise = this.props.revise;
     const errNo = this.props.errNo;
+    const format = this.props.format;
     if(type === 0) {
       return (
         <div className="container messageWrapper">
@@ -29,7 +30,7 @@ class Message extends React.Component {
     else if(type === 2) {
       return(
         <div className="container messageWrapper">
-          <SystemMessage content={content}/>
+          <SystemMessage content={content} format={format}/>
         </div>
       )
     }

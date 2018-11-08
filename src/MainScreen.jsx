@@ -38,12 +38,12 @@ class MainScreen extends React.Component {
     render() {
         const { topic, active, vocabList, highlightList, topicList } = this.state;
         console.log(active);
-        // const _active = true; // For debugging
+        const _active = true; // For debugging
         return (
             <div className="mainscreen row">
                 {
                     topic ?
-                    (active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
+                    (_active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
                     :
                     <div className="container chatbot col-8 text-center" style={{paddingTop:'200px'}}>
                             <h2 style={{fontWeight: '400'}}>대화를 나눌 주제를 골라주세요.</h2>

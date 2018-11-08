@@ -10,3 +10,8 @@
 .button-wrapper {
     padding-top: 8px;
 }
+
+.activitybox{
+    height:100vh;
+    overflow: auto;
+}

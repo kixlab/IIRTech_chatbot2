@@ -47,12 +47,18 @@ class Chatbot extends React.Component {
     this.setState({
       tense: response.tense
     })
+    
+    const msgList = response.guidemsg.split(",");
+
+    const pastText = msgList[0];
+    const futureText = msgList[1];
 
     if(response.tense === 'f') {
       this.appendMessage([
         {
           type: 2,
-          content: "나중에 영화관에 갈 일에 관해 얘기해볼까요?"
+          content: futureText,
+          format: false,
         }
       ])
     }
@@ -60,7 +66,8 @@ class Chatbot extends React.Component {
       this.appendMessage([
         {
           type: 2,
-          content: "영화관에 간 경험에 대해 얘기해봅시다."
+          content: pastText,
+          format: false,
         }
       ])
     }
@@ -119,7 +126,8 @@ class Chatbot extends React.Component {
       this.appendMessage([
         {
           type: 2,
-          content: "잘했어요! 대화를 다시 보며 맞춤법을 확인해볼까요?"
+          content: "잘했어요! 대화를 다시 보며 맞춤법을 확인해볼까요?",
+          format: false,
         }
       ])
       this.setState({
@@ -133,13 +141,20 @@ class Chatbot extends React.Component {
           {
             type: 0,
             content: text[i],
+            format: false,
           }
         ])
       }
       this.appendMessage([
         {
           type: 2,
-          content: "네, 아니요로 답해봅시다."
+          content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
+          format: false,
+        },
+        {
+          type: 2,
+          content: "네, 아니요로 답해봅시다.",
+          format: false,
         }
       ])
       this.appendMessage([
@@ -165,6 +180,7 @@ class Chatbot extends React.Component {
           {
             type: type,
             content: text[i],
+            format: false,
           }
         ])
       }
@@ -172,7 +188,8 @@ class Chatbot extends React.Component {
         this.appendMessage([
           {
             type: 2,
-            content: suggestMessage + " 같은 단어를 써볼까요?",
+            content: suggestMessage,
+            format: true,
           }
         ])
       }

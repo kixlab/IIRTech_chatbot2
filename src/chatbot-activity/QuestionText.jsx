@@ -11,6 +11,7 @@ class QuestionText extends React.Component {
         done: false,
     }
     this.onClickHandler = this.onClickHandler.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
   onClickHandler(index) {
@@ -24,6 +25,15 @@ class QuestionText extends React.Component {
         clicked: true,
         done: index === correct,
     })
+  }
+
+  scrollToBottom = () => {
+    this.props.messagesEnd.scrollIntoView({behavior: "smooth"});
+  }
+
+  componentDidUpdate(){
+      console.log("updated!")
+      this.scrollToBottom();
   }
 
   render() {
