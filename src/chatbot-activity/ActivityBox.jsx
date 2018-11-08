@@ -86,18 +86,24 @@ class ActivityBox extends React.Component {
             }
             {
                 contents.length>=questionIndex &&
-                [... Array(questionIndex)].map((e,index) => (
-                        <QuestionText
-                            key={index}
-                            number={index}
-                            type={contents[index]['type']}
-                            lang={contents[index]['lang']}
-                            content={contents[index]['content']}
-                            options={contents[index]['options']}
-                            correct={contents[index]['correct']}
-                            onCorrectHandler={this.onCorrectHandler}
-                        />
-                ))
+                (
+                    <div className="text-center" style={{paddingTop: '20px'}}>
+                        <h3 style={{fontWeight: '400'}}><strong>영화관</strong> 주제에 대해 대화를 나누기에 앞서, 주요 단어를 배워봅시다.</h3>
+                    {[... Array(questionIndex)].map((e,index) => (
+                            <QuestionText
+                                key={index}
+                                number={index}
+                                type={contents[index]['type']}
+                                lang={contents[index]['lang']}
+                                content={contents[index]['content']}
+                                options={contents[index]['options']}
+                                correct={contents[index]['correct']}
+                                onCorrectHandler={this.onCorrectHandler}
+                            />
+                    ))
+                    }
+                    </div>
+                )
             }
             {
                 done &&
