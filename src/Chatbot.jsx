@@ -119,7 +119,7 @@ class Chatbot extends React.Component {
       this.appendMessage([
         {
           type: 2,
-          content: "This is the end of current conversation"
+          content: "잘했어요! 대화를 다시 보며 맞춤법을 확인해볼까요?"
         }
       ])
       this.setState({
@@ -172,7 +172,7 @@ class Chatbot extends React.Component {
         this.appendMessage([
           {
             type: 2,
-            content: suggestMessage + " 단어를 써볼까요?.",
+            content: suggestMessage + " 같은 단어를 써볼까요?",
           }
         ])
       }

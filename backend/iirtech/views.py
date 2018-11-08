@@ -13,10 +13,11 @@ from .vocab_extractor import extract_vocab
 from .vocab_extractor import Papago
 
 from .hanspell import spell_checker
+from .find_similar import match_nouns
 
 STATIC_PATH = './backend/static/'
 
-lines = open(static('sample_convo.txt')).readlines()
+lines = open(static('travel.txt')).readlines()
 # lines = open(static('scenario.txt')).readlines()
 users = {}
 bot_list = []
@@ -26,6 +27,7 @@ class Bot():
         self.lines = lines
         self.id = str(uuid.uuid4())
         self.tense = None
+        self.replace_pairs = []
 
     def next_line(self):
         self.index += 1
@@ -37,7 +39,7 @@ class Bot():
             self.index += 1
             curr_line = self.lines[self.index]
         while 'b' in curr_line[1:curr_line.find('>')] and self.index < len(self.lines):
-            line.append(curr_line)
+            line.append(self.replace_words(curr_line))
             self.index += 1
             if self.index < len(self.lines):
                 curr_line = self.lines[self.index]
@@ -51,6 +53,13 @@ class Bot():
 
     def current_line(self):
         return self.lines[self.index]
+    
+    def replace_words(self, line):
+        new_line = line
+        for x in self.replace_pairs:
+            new_line = new_line.replace(x[1], x[0])
+        return new_line
+    
 
 def chooseTense(request):
     _tense = str(request.GET['tense'])
@@ -61,7 +70,6 @@ def chooseTense(request):
         "tense": _tense
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
-
 
 # Create your views here.
 def fetchMessage(request):
@@ -145,8 +153,22 @@ def fetchMessage(request):
             #     correct_sent += "<span className='purpleFont'>" + x + " </span>"
             # elif corrected_result['words'][x] == 4:
             #     correct_sent += "<span className='blueFont'>" + x + " </span>"
+        userline = bot.lines[bot.index]
+        ul_s = userline.split('(')
+        n_list = []
+        for x in ul_s:
+            if ')' in x:
+                n_list.append(x[:x.index(')')])
+        print(n_list)
+
+        if jpype.isJVMStarted():
+            jpype.attachThreadToJVM()
+        
+        bot.replace_pairs.extend(match_nouns(n_list, _text))
+        
         msg, next_line = bot.next_line()
         msg = process_msg(msg, bot.tense)
+        
         if msg[-1] == False:
             js = {
                 "text": msg[:-1],
@@ -216,7 +238,7 @@ def process_msg(msgs, choice):
     return processed
 
 def fetchActivity(request):
-    response = extract_vocab('../static/sample_convo.txt')
+    response = extract_vocab('../static/travel.txt')
     js = {'response': []}
     random.shuffle(response['A'])
     for v in response['A']:
