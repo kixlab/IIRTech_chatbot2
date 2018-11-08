@@ -139,7 +139,7 @@ class Chatbot extends React.Component {
       this.appendMessage([
         {
           type: 2,
-          content: "예, 아니오로 답해봅시다."
+          content: "네, 아니요로 답해봅시다."
         }
       ])
       this.appendMessage([

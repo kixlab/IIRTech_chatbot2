@@ -4,6 +4,7 @@ import json, urllib
 import pandas as pd
 from iirtech.models import VocabList, Filename
 import os
+from nltk import pos_tag, word_tokenize
 
 with open(static('apiKeys.json')) as apiKeys:
     js = json.load(apiKeys)
@@ -97,19 +98,27 @@ def extract_vocab(txtfile=static('sample_convo.txt')):
         for v in vocab:
             v = v.lower()
             translated = Papago('nmt',v,'ko')
+            tokenized = word_tokenize(translated)
+            noun = True
+            for p in pos_tag(tokenized):
+                if "V" == p[1][0]:
+                    noun = False
+                    break
+            if not noun:
+                continue
             level = ''
             if v in vocab_by_level['A']:
                 level = 'A'
-                vocab_from_dialogue_by_level['A'].append((v,translated))
+                vocab_from_dialogue_by_level['A'].append((v.lower(),translated))
             elif v in vocab_by_level['B']:
                 level = 'B'
-                vocab_from_dialogue_by_level['B'].append((v,translated))
+                vocab_from_dialogue_by_level['B'].append((v.lower(),translated))
             elif v in vocab_by_level['C']:
                 level = 'C'
-                vocab_from_dialogue_by_level['C'].append((v,translated))
-            v, created = VocabList.objects.get_or_create(
+                vocab_from_dialogue_by_level['C'].append((v.lower(),translated))
+            vocab, created = VocabList.objects.get_or_create(
                 filename=filename,
-                word=v,
+                word=v.lower(),
                 translated=translated.strip().lower(),
                 level=level
             )   

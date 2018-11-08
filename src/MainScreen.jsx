@@ -3,6 +3,7 @@ import React from 'react'
 import Chatbot from './Chatbot'
 import Sidebox from './Sidebox'
 import ActivityBox from './chatbot-activity/ActivityBox'
+import { Button } from 'semantic-ui-react';
 
 
 class MainScreen extends React.Component {
@@ -12,6 +13,8 @@ class MainScreen extends React.Component {
             active: false,
             vocabList: [],
             highlightList: [],
+            topic: false,
+            topicList: ['영화관', '시장', '학교']
         }
         this.addVocab = this.addVocab.bind(this);
         this.onProceedHandler = this.onProceedHandler.bind(this);
@@ -33,12 +36,27 @@ class MainScreen extends React.Component {
     }
 
     render() {
-        const { active, vocabList, highlightList } = this.state;
+        const { topic, active, vocabList, highlightList, topicList } = this.state;
         console.log(active);
         // const _active = true; // For debugging
         return (
             <div className="mainscreen row">
-                {active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>}
+                {
+                    topic ?
+                    (active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
+                    :
+                    <div className="container chatbot col-8 text-center" style={{paddingTop:'200px'}}>
+                            <h2 style={{fontWeight: '400'}}>대화를 나눌 주제를 골라주세요.</h2>
+                            {
+                                topicList.map((idx, value)=> (
+                                    <p>
+                                        <Button className="large" primary onClick={() => this.setState({topic: true})} style={{width: "110px"}}>
+                                            {idx}
+                                        </Button>
+                                    </p>
+                            ))}
+                    </div>
+                }
                 <Sidebox vocabList={vocabList} highlightList={highlightList}/>
             </div>
         )
