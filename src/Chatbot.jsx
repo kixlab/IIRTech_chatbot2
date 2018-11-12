@@ -18,9 +18,11 @@ class Chatbot extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
-    this.handleTense = this.handleTense.bind(this)
-    this.handleTenseChoice = this.handleTenseChoice.bind(this)
-    this.chooseTense = this.chooseTense.bind(this)
+    this.handleTense = this.handleTense.bind(this);
+    this.handleTenseChoice = this.handleTenseChoice.bind(this);
+    this.chooseTense = this.chooseTense.bind(this);
+    this.addLog = this.addLog.bind(this);
+    this.closeBot = this.closeBot.bind(this)
   }
 
   componentDidMount() {
@@ -29,6 +31,20 @@ class Chatbot extends React.Component {
     const index = -1;
     const userid = '';
     this.sendMessage(text, type, index, userid);
+  }
+
+  closeBot() {
+    fetch(`iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+      .then(res => res.json())
+      .then(response => console.log("Close: ", response.success))
+  }
+
+  addLog(msg) {
+    const type = msg.type;
+    const content = msg.content;
+    fetch(`iirtech/handleLog?type=${type}&content=${content}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+      .then(res => res.json())
+      .then(response => console.log("Logging: ", response.success))
   }
 
   chooseTense(tense) {
@@ -143,7 +159,8 @@ class Chatbot extends React.Component {
       this.setState({
         buttonDisabled: true,
         revise: true,
-      })
+      });
+      this.closeBot()
     }
     else if(type === 4) {
       for(let i = 0; i < text.length; i++){
@@ -170,7 +187,7 @@ class Chatbot extends React.Component {
       this.appendMessage([
         {
           type:3,
-          content: ""
+          content: "Choice Message"
         }
       ])
     }
@@ -233,11 +250,13 @@ class Chatbot extends React.Component {
     for (let i=0; i<msg.length; i++) {
       this.setState({
         messageLog: this.state.messageLog.slice().concat(msg[i])
-      })
+      });
+      this.addLog(msg[i]);
     }
     this.setState({
       currentMessage: "",
     })
+    
   }
 
   // Handler for the send button click event
