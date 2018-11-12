@@ -38,9 +38,19 @@ class Chatbot extends React.Component {
   }
 
   sendMessage(text, type, index, userid) {
-    fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
-      .then(res => res.json())
-      .then(response => this.handleResponse(response))
+    if (type===0){
+      const {topic} = this.props;
+      var t = '';
+      (topic === "영화관") ? t='movie' : t='travel'
+      fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}&topic=${t}`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => this.handleResponse(response))
+    }
+    else{
+      fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => this.handleResponse(response))
+    }
   }
 
   handleTense(response) {

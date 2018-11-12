@@ -14,7 +14,7 @@ class MainScreen extends React.Component {
             vocabList: [],
             highlightList: [],
             topic: false,
-            topicList: ['영화관', '시장', '학교']
+            topicList: ['영화관', '여행']
         }
         this.addVocab = this.addVocab.bind(this);
         this.onProceedHandler = this.onProceedHandler.bind(this);
@@ -43,14 +43,14 @@ class MainScreen extends React.Component {
             <div className="mainscreen row">
                 {
                     topic ?
-                    (_active ? <Chatbot vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
+                    (active ? <Chatbot topic={topic} vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox topic={topic} addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
                     :
                     <div className="container chatbot col-8 text-center" style={{paddingTop:'200px'}}>
                             <h2 style={{fontWeight: '400'}}>대화를 나눌 주제를 골라주세요.</h2>
                             {
                                 topicList.map((idx, value)=> (
                                     <p>
-                                        <Button className="large" primary onClick={() => this.setState({topic: true})} style={{width: "110px"}}>
+                                        <Button className="large" primary value={idx} onClick={() => this.setState({topic:idx})} style={{width: "110px"}}>
                                             {idx}
                                         </Button>
                                     </p>

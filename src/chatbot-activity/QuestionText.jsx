@@ -83,7 +83,7 @@ class QuestionText extends React.Component {
                                     }
                                     onClick={() => (!done && this.onClickHandler(index))}
                                     >
-                                    {["a","b","c"][index]+". "+options[index].toLowerCase()}
+                                    {["a","b","c"][index]+". "+options[index]}
                                 </button>
                             </div>
                         ))

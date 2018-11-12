@@ -5,6 +5,7 @@ import json, random
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import os, uuid
 import jpype
+from .scenario_parser import parser
 
 # Korean parser
 from . import korean_parsing
@@ -22,9 +23,9 @@ lines = open(static('travel.txt')).readlines()
 users = {}
 bot_list = []
 class Bot():
-    def __init__(self):
+    def __init__(self,line=lines):
         self.index = 0
-        self.lines = lines
+        self.lines = line
         self.id = str(uuid.uuid4())
         self.tense = None
         self.replace_pairs = []
@@ -97,7 +98,14 @@ def fetchMessage(request):
     
     # Initialize Bot
     if _type == 0:
-        bot = Bot()
+        topic = request.GET.get('topic')
+        print(topic)
+        txtfile = ''
+        if topic == 'movie':
+            txtfile='movie.txt'
+        elif topic == 'travel':
+            txtfile='travel.txt'
+        bot = Bot(line=open(static(txtfile)).readlines())
         msg = [bot.lines[bot.index]]
         _userid = bot.id
         users[_userid] = bot
@@ -239,7 +247,13 @@ def process_msg(msgs, choice):
     return processed
 
 def fetchActivity(request):
-    response = extract_vocab('../static/travel.txt')
+    topic = request.GET.get('topic')
+    txtfile = ''
+    if topic == '영화관':
+        txtfile='../static/movie.txt'
+    elif topic == '여행':
+        txtfile='../static/travel.txt'
+    response = extract_vocab(txtfile)
     js = {'response': []}
     random.shuffle(response['A'])
     for v in response['A']:
@@ -299,3 +313,5 @@ def translateToKorean(request):
         'translatedText': translated,
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
+
+parser()

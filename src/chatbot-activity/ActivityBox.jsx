@@ -29,7 +29,10 @@ class ActivityBox extends React.Component {
 
   componentDidMount() {
     this.scrollToBottom();
-    fetch(`iirtech/fetchActivity`, {"Access-Control-Allow-Origin":"*"})
+    const {topic} = this.props;
+    var t = '';
+    (topic === "영화관") ? t='movie' : t='travel'
+    fetch(`iirtech/fetchActivity?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.setState({contents:response['response'],loading:false}))
 
@@ -76,7 +79,7 @@ class ActivityBox extends React.Component {
     const { contents, questionIndex, done, loading } = this.state; 
     const { onProceedHandler } = this.props;
     return (
-        <div className="container chatbot col-8 activitybox">
+        <div className="container chatbot col-8 activitybox" style={{paddingBottom: '200px'}}>
             {
                 loading ?
                 <Dimmer active>
