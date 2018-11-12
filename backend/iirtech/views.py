@@ -5,6 +5,7 @@ import json, random
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import os, uuid
 import jpype
+import datetime
 
 # Korean parser
 from . import korean_parsing
@@ -28,6 +29,8 @@ class Bot():
         self.id = str(uuid.uuid4())
         self.tense = None
         self.replace_pairs = []
+        self.log_file = open(static("log/" + self.id + ".log"), "a")
+        self.log_file.write("Log start at " + str(datetime.datetime.now()) + "\n")
 
     def next_line(self):
         self.index += 1
@@ -60,6 +63,31 @@ class Bot():
             new_line = new_line.replace(x[1], x[0])
         return new_line
     
+
+def closeBot(request):
+    _userid = str(request.GET['userid'])
+    bot = users[_userid]
+
+    bot.log_file.close()
+    js = {
+        "success": True,
+    }
+    return HttpResponse(json.dumps(js), content_type="application/json")
+
+def handleLog(request):
+    _userid = str(request.GET['userid'])
+    _type = int(request.GET['type'])
+    _content = str(request.GET['content'])
+    type_str = ["Bot", "User", "System", "Choice"]
+    
+
+    bot = users[_userid]
+    bot.log_file.write("{:>6}: {}\n".format(type_str[_type], _content))
+
+    js = {
+        "success": True,
+    }
+    return HttpResponse(json.dumps(js), content_type="application/json")
 
 def chooseTense(request):
     _tense = str(request.GET['tense'])

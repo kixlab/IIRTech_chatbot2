@@ -37,7 +37,7 @@ class MainScreen extends React.Component {
 
     render() {
         const { topic, active, vocabList, highlightList, topicList } = this.state;
-        console.log(active);
+        // console.log(active);
         const _active = true; // For debugging
         return (
             <div className="mainscreen row">
