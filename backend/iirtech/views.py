@@ -29,7 +29,7 @@ class Bot():
         self.id = str(uuid.uuid4())
         self.tense = None
         self.replace_pairs = []
-        self.log_file = open(static("log/" + self.id + ".log"), "a")
+        self.log_file = open(static("log/" + self.id + ".txt"), "a")
         self.log_file.write("Log start at " + str(datetime.datetime.now()) + "\n")
 
     def next_line(self):
