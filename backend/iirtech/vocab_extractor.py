@@ -70,15 +70,16 @@ def Papago(model, text, sl):
 mecab = Mecab()
 lines = []
 
-def extract_vocab(txtfile=static('sample_convo.txt')):
+def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
     fname = os.path.basename(txtfile)
     filename, created = Filename.objects.get_or_create(
         filename=fname
     )
     vocab_from_dialogue_by_level = {'A':[],'B':[],'C':[],'translated':[]}
+    print(lines)
     if created:
-        with open(static(txtfile)) as f:
-            lines = f.readlines()
+        # with open(static(txtfile)) as f:
+        #     lines = f.readlines()
 
         re = pd.read_excel(static('vocab_list.xls'))
         vocab_list = re['단어']
@@ -91,6 +92,7 @@ def extract_vocab(txtfile=static('sample_convo.txt')):
         
         vocab = set()
         for line in lines:
+            print(line)
             for n in mecab.nouns(line):
                vocab.add(n)
 

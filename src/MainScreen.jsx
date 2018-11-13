@@ -14,7 +14,7 @@ class MainScreen extends React.Component {
             vocabList: [],
             highlightList: [],
             topic: false,
-            topicList: ['영화관', '여행']
+            topicList: ['영화관', '여행', '건강', '3급 일상생활', '3급 건강', '3급 교통', '3급 여행']
         }
         this.addVocab = this.addVocab.bind(this);
         this.onProceedHandler = this.onProceedHandler.bind(this);

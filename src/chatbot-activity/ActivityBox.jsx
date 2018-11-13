@@ -31,10 +31,9 @@ class ActivityBox extends React.Component {
     this.scrollToBottom();
     const {topic} = this.props;
     var t = '';
-    (topic === "영화관") ? t='movie' : t='travel'
     fetch(`iirtech/fetchActivity?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
-        .then(response => this.setState({contents:response['response'],loading:false}))
+        .then(response => this.setState({contents:response['response'],loading:false},() => (console.log(this.state.contents))))
 
     // const json = [
     //     {

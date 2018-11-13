@@ -1,0 +1,17 @@
+Log start at 2018-11-13 02:46:38.680061
+   Bot: <bw>안녕하세요.
+System: 경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?
+System: 네, 아니요로 답해봅시다.
+Choice: Choice Message
+System: <bw>꼭 문장부호(sentence punctuation: .?!)를 쓰세요.
+   Bot: 꼭 문장부호(sentence punctuation: .?!)를 썼세요.
+   Bot: 감사했습니다.
+   Bot: 안녕했세요?
+System: 안녕
+  User: 안녕하세요.
+   Bot: 잘 지냈어요?
+  User: 잘 지냇어요.
+   Bot: 사용자 씨는 초콜릿이나 케이크 같은 단 음식을 좋아했어요?
+  User: 네
+   Bot: 사용자 씨는 왜 단 음식을 덨세요?
+System: 기분, 음식, 스트레스

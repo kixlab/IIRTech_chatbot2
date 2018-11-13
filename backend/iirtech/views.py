@@ -129,13 +129,29 @@ def fetchMessage(request):
     # Initialize Bot
     if _type == 0:
         topic = request.GET.get('topic')
-        print(topic)
         txtfile = ''
-        if topic == 'movie':
+        lines = ''
+        if topic == '영화관':
             txtfile='movie.txt'
-        elif topic == 'travel':
+            lines = open(static(txtfile)).readlines()
+        elif topic == '여행':
             txtfile='travel.txt'
-        bot = Bot(line=open(static(txtfile)).readlines())
+            lines = open(static(txtfile)).readlines()
+        elif topic == '건강':
+            lines = parser().split('\n')
+        elif topic == '3급 일상생활':
+            txtfile='../static/scenario/3/daylife.xlsx'
+            lines = parser('scenario/3/daylife.xls').split('\n')
+        elif topic == '3급 건강':
+            txtfile='../static/scenario/3/health.xlsx'
+            lines = parser('scenario/3/health.xlsx').split('\n')
+        elif topic == '3급 교통':
+            txtfile='../static/scenario/3/transportation.xlsx'
+            lines = parser('scenario/3/transportation.xlsx').split('\n')
+        elif topic == '3급 여행':
+            txtfile='../static/scenario/3/travel.xlsx'
+            lines = parser('scenario/3/travel.xlsx').split('\n')
+        bot = Bot(line=lines)
         msg = [bot.lines[bot.index]]
         _userid = bot.id
         users[_userid] = bot
@@ -281,12 +297,31 @@ def fetchActivity(request):
     txtfile = ''
     if topic == '영화관':
         txtfile='../static/movie.txt'
+        lines = open(static(txtfile)).readlines()
     elif topic == '여행':
         txtfile='../static/travel.txt'
-    response = extract_vocab(txtfile)
+        lines = open(static(txtfile)).readlines()
+    elif topic == '건강':
+        txtfile='../static/scenario/L4-M99-S186-107.xlsx'
+        lines = parser().split('\n')
+    elif topic == '3급 일상생활':
+        txtfile='../static/scenario/3/daylife.xlsx'
+        lines = parser('scenario/3/daylife.xls').split('\n')
+    elif topic == '3급 건강':
+        txtfile='../static/scenario/3/health.xlsx'
+        lines = parser('scenario/3/health.xlsx').split('\n')
+    elif topic == '3급 교통':
+        txtfile='../static/scenario/3/transportation.xlsx'
+        lines = parser('scenario/3/transportation.xlsx').split('\n')
+    elif topic == '3급 여행':
+        txtfile='../static/scenario/3/travel.xlsx'
+        lines = parser('scenario/3/travel.xlsx').split('\n')
+    response = extract_vocab(txtfile=txtfile,lines=lines)
+    print(response)
     js = {'response': []}
     random.shuffle(response['A'])
     for v in response['A']:
+        print(v)
         if len(v[0])>1:
             options = []
             options.append(v[1])
@@ -334,6 +369,7 @@ def fetchActivity(request):
                 'options': options,
                 'correct': options.index(v[1]),
             })
+    print(js)
     return HttpResponse(json.dumps(js), content_type="application/json")
 
 def translateToKorean(request):
@@ -343,5 +379,3 @@ def translateToKorean(request):
         'translatedText': translated,
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
-
-parser()
