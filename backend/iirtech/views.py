@@ -306,7 +306,7 @@ def fetchActivity(request):
         lines = parser().split('\n')
     elif topic == '3급 일상생활':
         txtfile='../static/scenario/3/daylife.xlsx'
-        lines = parser('scenario/3/daylife.xls').split('\n')
+        lines = parser('scenario/3/daylife.xlsx').split('\n')
     elif topic == '3급 건강':
         txtfile='../static/scenario/3/health.xlsx'
         lines = parser('scenario/3/health.xlsx').split('\n')

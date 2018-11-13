@@ -3,7 +3,7 @@ import openpyxl
 
 def parser(fname="scenario/L4-M99-S186-107.xlsx"):
     scenario = static(fname)
-    wb = openpyxl.load_workbook(scenario)
+    wb = openpyxl.load_workbook(scenario, read_only=True, data_only=True)
     sheet_ranges = wb['Sheet 1']
     _level = ''
     _process = ''
