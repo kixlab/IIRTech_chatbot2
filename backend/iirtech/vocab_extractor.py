@@ -78,6 +78,7 @@ def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
     vocab_from_dialogue_by_level = {'A':[],'B':[],'C':[],'translated':[]}
     print(lines)
     if created:
+        print("Created")
         # with open(static(txtfile)) as f:
         #     lines = f.readlines()
 
@@ -126,7 +127,9 @@ def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
             )   
             vocab_from_dialogue_by_level['translated'].append(translated)
     else:
+        print("Get")
         vList = VocabList.objects.filter(filename=filename)
+        print(vList)
         vList_levelA = vList.filter(level='A')
         for v in vList_levelA:
             vocab_from_dialogue_by_level['A'].append((v.word,v.translated))
