@@ -11,7 +11,7 @@ class Chatbot extends React.Component {
       currentMessage: "",
       userid: '',
       tense: null,
-      buttonDisabled: true,
+      buttonDisabled: false,
       revise: false,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -170,24 +170,26 @@ class Chatbot extends React.Component {
           }
         ])
       }
-      this.appendMessage([
-        {
-          type: 2,
-          content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
-          format: false,
-        },
-        {
-          type: 2,
-          content: "네, 아니요로 답해봅시다.",
-          format: false,
-        }
-      ])
-      this.appendMessage([
-        {
-          type:3,
-          content: "Choice Message"
-        }
-      ])
+      if(response.hasTense){
+        this.appendMessage([
+          {
+            type: 2,
+            content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
+            format: false,
+          },
+          {
+            type: 2,
+            content: "네, 아니요로 답해봅시다.",
+            format: false,
+          }
+        ])
+        this.appendMessage([
+          {
+            type:3,
+            content: "Choice Message"
+          }
+        ])
+      }
     }
     else{
       if (original != ""){

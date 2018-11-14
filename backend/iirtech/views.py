@@ -34,6 +34,7 @@ class Bot():
         self.replace_pairs = []
         self.log_file = open(static("log/" + self.id + ".txt"), "a")
         self.log_file.write("Log start at " + str(datetime.datetime.now()) + "\n")
+        self.hasTense = False
 
     def next_line(self):
         self.index += 1
@@ -131,14 +132,17 @@ def fetchMessage(request):
         topic = request.GET.get('topic')
         txtfile = ''
         lines = ''
+        hasTense = False
         if topic == '영화관':
             txtfile='movie.txt'
             lines = open(static(txtfile)).readlines()
+            hasTense = True
         elif topic == '여행':
             txtfile='travel.txt'
             lines = open(static(txtfile)).readlines()
+            hasTense = True
         elif topic == '건강':
-            lines = parser().split('\n')
+            lines = open(static('scenario/health.txt')).readlines()
         elif topic == '3급 일상생활':
             txtfile='../static/scenario/3/daylife.xlsx'
             lines = parser('scenario/3/daylife.xlsx').split('\n')
@@ -152,6 +156,7 @@ def fetchMessage(request):
             txtfile='../static/scenario/3/travel.xlsx'
             lines = parser('scenario/3/travel.xlsx').split('\n')
         bot = Bot(line=lines)
+        bot.hasTense = hasTense
         msg = [bot.lines[bot.index]]
         _userid = bot.id
         users[_userid] = bot
@@ -162,6 +167,7 @@ def fetchMessage(request):
             "userid": _userid,
             "nextline": "",
             "original": _text,
+            "hasTense": bot.hasTense,
         }
     else:
         bot = users[_userid]
@@ -182,14 +188,14 @@ def fetchMessage(request):
                 "text": [""],
                 "type": 3,
                 "success": 1,
-                "userid": _userid
+                "userid": _userid,
             }
         else:
             js = {
                 "text": msg,
                 "type": 0 if (bot.index-1)%2==0 else 2,
                 "success": 1,
-                "userid": _userid
+                "userid": _userid,
             }
     elif _type == 1:
         corrected_result = spell_checker.check(_text).as_dict()
@@ -290,6 +296,8 @@ def process_msg(msgs, choice):
             processed.append(korean_parsing.make_past(line_s))
         elif choice == 'f':
             processed.append(future)
+        else:
+            processed.append(line_s)
     return processed
 
 def fetchActivity(request):
@@ -302,8 +310,8 @@ def fetchActivity(request):
         txtfile='../static/travel.txt'
         lines = open(static(txtfile)).readlines()
     elif topic == '건강':
-        txtfile='../static/scenario/L4-M99-S186-107.xlsx'
-        lines = parser().split('\n')
+        txtfile='../static/scenario/health.txt'
+        lines = open(static(txtfile)).readlines()
     elif topic == '3급 일상생활':
         txtfile='../static/scenario/3/daylife.xlsx'
         lines = parser('scenario/3/daylife.xlsx').split('\n')
@@ -317,6 +325,7 @@ def fetchActivity(request):
         txtfile='../static/scenario/3/travel.xlsx'
         lines = parser('scenario/3/travel.xlsx').split('\n')
     response = extract_vocab(txtfile=txtfile,lines=lines)
+    print("Response printing: ")
     print(response)
     js = {'response': []}
     random.shuffle(response['A'])
