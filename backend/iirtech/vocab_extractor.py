@@ -73,7 +73,7 @@ lines = []
 def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
     fname = os.path.basename(txtfile)
     filename, created = Filename.objects.get_or_create(
-        filename=fname
+        filename=txtfile
     )
     vocab_from_dialogue_by_level = {'A':[],'B':[],'C':[],'translated':[]}
     print(lines)
@@ -82,7 +82,7 @@ def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
         # with open(static(txtfile)) as f:
         #     lines = f.readlines()
 
-        re = pd.read_excel(static('vocab_list.xls'))
+        re = pd.read_excel(static('vocab_list.xlsx'))
         vocab_list = re['단어']
         level_list = re['등급']
         list_length = len(vocab_list)

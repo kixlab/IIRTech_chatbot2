@@ -155,6 +155,30 @@ def fetchMessage(request):
         elif topic == '3급 여행':
             txtfile='../static/scenario/3/travel.xlsx'
             lines = parser('scenario/3/travel.xlsx').split('\n')
+        elif topic == '4급 일상생활':
+            txtfile='../static/scenario/4/daylife.xlsx'
+            lines = parser('scenario/4/daylife.xlsx').split('\n')
+        elif topic == '4급 건강':
+            txtfile='../static/scenario/4/health.xlsx'
+            lines = parser('scenario/4/health.xlsx').split('\n')
+        elif topic == '4급 쇼핑':
+            txtfile='../static/scenario/4/shopping.xlsx'
+            lines = parser('scenario/4/shopping.xlsx').split('\n')
+        elif topic == '4급 여행':
+            txtfile='../static/scenario/4/travel.xlsx'
+            lines = parser('scenario/4/travel.xlsx').split('\n')
+        elif topic == '5급 음식':
+            txtfile='../static/scenario/5/food.xlsx'
+            lines = parser('scenario/5/food.xlsx').split('\n')
+        elif topic == '5급 학교생활':
+            txtfile='../static/scenario/5/schoollife.xlsx'
+            lines = parser('scenario/5/schoollife.xlsx').split('\n')
+        elif topic == '5급 여행':
+            txtfile='../static/scenario/5/travel.xlsx'
+            lines = parser('scenario/5/travel.xlsx').split('\n')
+        elif topic == '5급 날씨':
+            txtfile='../static/scenario/5/weather.xlsx'
+            lines = parser('scenario/5/weather.xlsx').split('\n')
         bot = Bot(line=lines)
         bot.hasTense = hasTense
         msg = [bot.lines[bot.index]]
@@ -324,6 +348,30 @@ def fetchActivity(request):
     elif topic == '3급 여행':
         txtfile='../static/scenario/3/travel.xlsx'
         lines = parser('scenario/3/travel.xlsx').split('\n')
+    elif topic == '4급 일상생활':
+        txtfile='../static/scenario/4/daylife.xlsx'
+        lines = parser('scenario/4/daylife.xlsx').split('\n')
+    elif topic == '4급 건강':
+        txtfile='../static/scenario/4/health.xlsx'
+        lines = parser('scenario/4/health.xlsx').split('\n')
+    elif topic == '4급 쇼핑':
+        txtfile='../static/scenario/4/shopping.xlsx'
+        lines = parser('scenario/4/shopping.xlsx').split('\n')
+    elif topic == '4급 여행':
+        txtfile='../static/scenario/4/travel.xlsx'
+        lines = parser('scenario/4/travel.xlsx').split('\n')
+    elif topic == '5급 음식':
+        txtfile='../static/scenario/5/food.xlsx'
+        lines = parser('scenario/5/food.xlsx').split('\n')
+    elif topic == '5급 학교생활':
+        txtfile='../static/scenario/5/schoollife.xlsx'
+        lines = parser('scenario/5/schoollife.xlsx').split('\n')
+    elif topic == '5급 여행':
+        txtfile='../static/scenario/5/travel.xlsx'
+        lines = parser('scenario/5/travel.xlsx').split('\n')
+    elif topic == '5급 날씨':
+        txtfile='../static/scenario/5/weather.xlsx'
+        lines = parser('scenario/5/weather.xlsx').split('\n')
     response = extract_vocab(txtfile=txtfile,lines=lines)
     print("Response printing: ")
     print(response)

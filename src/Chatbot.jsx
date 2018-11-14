@@ -7,7 +7,11 @@ class Chatbot extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageLog: [],
+      messageLog: [{
+        type: 2,
+        content: "꼭 문장부호(sentence punctuation: .?!)를 쓰세요.",
+        format: false,
+      }],
       currentMessage: "",
       userid: '',
       tense: null,
@@ -280,7 +284,7 @@ class Chatbot extends React.Component {
 
   render() {
     return (
-      <div className="container chatbot col-8">
+      <div className="container chatbot col-8" style={{padding:'5px 0'}}>
         <MessageBox messageLog={this.state.messageLog} handleClick={this.handleTenseChoice} done={this.state.tense!=null} chosen={this.state.tense==='p'?0:1} revise={this.state.revise}/>
         <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} disabled={this.state.buttonDisabled}/>
       </div>
