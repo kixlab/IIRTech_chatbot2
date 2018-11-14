@@ -91,7 +91,7 @@ class ActivityBox extends React.Component {
                 contents.length>=questionIndex &&
                 (
                     <div className="text-center" style={{paddingTop: '20px'}}>
-                        <h3 style={{fontWeight: '400'}}><strong>영화관</strong> 주제에 대해 대화를 나누기에 앞서, 주요 단어를 배워봅시다.</h3>
+                        <h3 style={{fontWeight: '400'}}><strong>{this.props.topic}</strong> 주제에 대해 대화를 나누기에 앞서, 주요 단어를 배워봅시다.</h3>
                     {[... Array(questionIndex)].map((e,index) => (
                             <QuestionText
                                 key={index}

@@ -1,5 +1,0 @@
-Log start at 2018-11-13 02:42:14.685217
-   Bot: 서울에 가 본 적이 있나요?
-System: 경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?
-System: 네, 아니요로 답해봅시다.
-Choice: Choice Message

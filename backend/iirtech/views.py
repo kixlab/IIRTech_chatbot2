@@ -144,20 +144,20 @@ def fetchMessage(request):
         elif topic == '건강':
             lines = open(static('scenario/health.txt')).readlines()
         elif topic == '3급 일상생활':
-            txtfile='../static/scenario/3/daylife.xlsx'
-            lines = parser('scenario/3/daylife.xls').split('\n')
+            txtfile='scenario/3/daylife.txt'
+            lines = open(static(txtfile)).readlines()
         elif topic == '3급 건강':
-            txtfile='../static/scenario/3/health.xlsx'
-            lines = parser('scenario/3/health.xlsx').split('\n')
+            txtfile='scenario/3/health3.txt'
+            lines = open(static(txtfile)).readlines()
         elif topic == '3급 교통':
-            txtfile='../static/scenario/3/transportation.xlsx'
-            lines = parser('scenario/3/transportation.xlsx').split('\n')
+            txtfile='scenario/3/transportation.txt'
+            lines = open(static(txtfile)).readlines()
         elif topic == '3급 여행':
-            txtfile='../static/scenario/3/travel.xlsx'
-            lines = parser('scenario/3/travel.xlsx').split('\n')
+            txtfile='scenario/3/travel.txt'
+            lines = open(static(txtfile)).readlines()
         bot = Bot(line=lines)
         bot.hasTense = hasTense
-        msg = [bot.lines[bot.index]]
+        msg = process_msg([bot.lines[bot.index]], 'u')
         _userid = bot.id
         users[_userid] = bot
         js = {
@@ -290,7 +290,7 @@ def process_msg(msgs, choice):
 
         if 'g' in tags: #추측 미래 시제
             future = korean_parsing.make_future_guess(line_s)
-        else: #의지 미래 시제
+        elif 'w' in tags: #의지 미래 시제
             future = korean_parsing.make_future_will(line_s)
         if choice == 'p':
             processed.append(korean_parsing.make_past(line_s))
@@ -310,20 +310,35 @@ def fetchActivity(request):
         txtfile='../static/travel.txt'
         lines = open(static(txtfile)).readlines()
     elif topic == '건강':
-        txtfile='../static/scenario/health.txt'
-        lines = open(static(txtfile)).readlines()
+        lines = open(static('scenario/health.txt')).readlines()
     elif topic == '3급 일상생활':
-        txtfile='../static/scenario/3/daylife.xlsx'
-        lines = parser('scenario/3/daylife.xlsx').split('\n')
+        txtfile='scenario/3/daylife.txt'
+        lines = open(static(txtfile)).readlines()
     elif topic == '3급 건강':
-        txtfile='../static/scenario/3/health.xlsx'
-        lines = parser('scenario/3/health.xlsx').split('\n')
+        txtfile='scenario/3/health3.txt'
+        lines = open(static(txtfile)).readlines()
     elif topic == '3급 교통':
-        txtfile='../static/scenario/3/transportation.xlsx'
-        lines = parser('scenario/3/transportation.xlsx').split('\n')
+        txtfile='scenario/3/transportation.txt'
+        lines = open(static(txtfile)).readlines()
     elif topic == '3급 여행':
-        txtfile='../static/scenario/3/travel.xlsx'
-        lines = parser('scenario/3/travel.xlsx').split('\n')
+        txtfile='scenario/3/travel.txt'
+        lines = open(static(txtfile)).readlines()
+    
+    # elif topic == '건강':
+    #     txtfile='../static/scenario/health.txt'
+    #     lines = open(static(txtfile)).readlines()
+    # elif topic == '3급 일상생활':
+    #     txtfile='../static/scenario/3/daylife.xlsx'
+    #     lines = parser('scenario/3/daylife.xlsx').split('\n')
+    # elif topic == '3급 건강':
+    #     txtfile='../static/scenario/3/health.xlsx'
+    #     lines = parser('scenario/3/health.xlsx').split('\n')
+    # elif topic == '3급 교통':
+    #     txtfile='../static/scenario/3/transportation.xlsx'
+    #     lines = parser('scenario/3/transportation.xlsx').split('\n')
+    # elif topic == '3급 여행':
+    #     txtfile='../static/scenario/3/travel.xlsx'
+    #     lines = parser('scenario/3/travel.xlsx').split('\n')
     response = extract_vocab(txtfile=txtfile,lines=lines)
     print("Response printing: ")
     print(response)
