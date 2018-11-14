@@ -1,0 +1,5 @@
+Log start at 2018-11-13 22:42:04.458341
+   Bot: 
+System: 경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?
+System: 네, 아니요로 답해봅시다.
+Choice: Choice Message

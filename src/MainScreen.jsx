@@ -14,6 +14,7 @@ class MainScreen extends React.Component {
             vocabList: [],
             highlightList: [],
             topic: false,
+            // topicList: ['영화관', '여행', '건강', '취미', '교통']
             topicList: ['영화관', '여행', '건강', '3급 일상생활', '3급 건강', '3급 교통', '3급 여행']
         }
         this.addVocab = this.addVocab.bind(this);
@@ -43,14 +44,14 @@ class MainScreen extends React.Component {
             <div className="mainscreen row">
                 {
                     topic ?
-                    (active ? <Chatbot topic={topic} vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox topic={topic} addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
+                    (_active ? <Chatbot topic={topic} vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox topic={topic} addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
                     :
-                    <div className="container chatbot col-8 text-center" style={{paddingTop:'200px'}}>
+                    <div className="container chatbot col-8 text-center" style={{width: '80%', paddingTop:'10%'}}>
                             <h2 style={{fontWeight: '400'}}>대화를 나눌 주제를 골라주세요.</h2>
                             {
                                 topicList.map((idx, value)=> (
                                     <p>
-                                        <Button className="large" primary value={idx} onClick={() => this.setState({topic:idx})} style={{width: "110px"}}>
+                                        <Button className="large" primary value={idx} onClick={() => this.setState({topic:idx})} style={{width: "150px"}}>
                                             {idx}
                                         </Button>
                                     </p>
