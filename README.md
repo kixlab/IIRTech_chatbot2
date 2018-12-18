@@ -1,47 +1,26 @@
-# KIXLAB Chatbot Template
+# Korean Language Learning Chatbot
+This is a chatbot that helps korean language learners to improve on vocabulary and develop communicative skills.
 
-This is the very early version of KIXLAB's internal chatbot template.
-It is based on React in the frontend and Django in the backend. Feel free to make updates, share new ideas, and find errors.
+### How to run chatbot for development on local server
+To run the application, you need two running shells.
 
-### Component Sturcture
-- Chatbot.jsx
-  - MessageBox.jsx
-    - Message.jsx
-      - BotMessage.jsx
-      - SystemMessage.jsx
-      - UserMessage.jsx
-  - InputBox.jsx
-
-### HOW-TO add message
-- All messages are managed in Chatbot.jsx
-- Use appendMessage function to add messages
-  - The argument should be in json [{type: integer, content: string},{type: integer, content: string}]
-
-### HOW-TO run chatbot for development
-- Clone the repository to a directory
-- On terminal shell
+- On one of the terminal shells
   ```
   npm start
   ```
-- Open another shell
+- In the other shell (example with port 8000)
   ```
   python manage.py runserver 8000
   ```
+  - If you want to run on a remote server, change the BASE_URL in ./src/configs/constants.js
 
-### HOW-TO run chatbot for deployment
-- Run the following in the directory respectively
-  ```
-  npm run build
-  mv build ./backend
-  cd backend && python manage.py collectstatic
-  mv build/manifest.json static
-  ```
-- Then open index.html in backend/build directory and reference static files (css, js, etc)
-- If everything is ready
-  ```
-  python manage.py runserver
-  ```
-- For more information, refer to https://medium.com/@nicholaskajoh/heres-a-dead-simple-react-django-setup-for-your-next-project-c0b0036663c6
+### React Component Sturcture
+- MainScreen
+  - ActivityBox
+  - Chatbot
+
+Intially, in the MainScreen component users select one topic from given a list of dialogue topics.
+Upon the selection of topic, activities are rendered by ActivityBox. Then, Chatbot is rendered after all the activities are completed. See each of the component file for more information.
 
 ### Quick Note
 

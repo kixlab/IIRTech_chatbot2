@@ -2,6 +2,7 @@ import React from 'react';
 import "./Chatbot.css";
 import MessageBox from './MessageBox';
 import InputBox from './InputBox';
+import { BASE_URL } from './configs/costants';
 
 class Chatbot extends React.Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class Chatbot extends React.Component {
   }
 
   closeBot() {
-    fetch(`iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => console.log("Close: ", response.success))
   }
@@ -46,13 +47,13 @@ class Chatbot extends React.Component {
   addLog(msg) {
     const type = msg.type;
     const content = msg.content;
-    fetch(`iirtech/handleLog?type=${type}&content=${content}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/handleLog?type=${type}&content=${content}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => console.log("Logging: ", response.success))
   }
 
   chooseTense(tense) {
-    fetch(`iirtech/chooseTense?tense=${tense}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/chooseTense?tense=${tense}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleTense(response))
   }
@@ -60,12 +61,12 @@ class Chatbot extends React.Component {
   sendMessage(text, type, index, userid) {
     if (type===0){
       const {topic} = this.props;
-      fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}&topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
+      fetch(`${BASE_URL}/iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}&topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.handleResponse(response))
     }
     else{
-      fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
+      fetch(`${BASE_URL}/iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.handleResponse(response))
     }
@@ -100,7 +101,7 @@ class Chatbot extends React.Component {
       ])
     }
 
-    fetch(`iirtech/fetchMessage?text=${""}&type=${1}&index=${0}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/fetchMessage?text=${""}&type=${1}&index=${0}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleResponse(response))
   }

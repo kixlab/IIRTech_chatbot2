@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from iirtech.models import QuestionType
-import json, random
+from iirtech.models import QuestionType, Filename
+import json, random, glob
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import os, uuid
 import jpype
@@ -20,6 +20,13 @@ from .hanspell import spell_checker
 from .find_similar import match_nouns
 
 STATIC_PATH = './backend/static/'
+for filepath in glob.glob('./static/scenario/**/*.xlsx'):
+    filename = filepath.strip('./static/scenario/')
+    topic = '%s급_%s' %(filename[0], filename[2:])
+    f, created = Filename.objects.get_or_create(
+        filename=filename,
+        topic=topic
+    )
 
 lines = open(static('travel.txt')).readlines()
 # lines = open(static('scenario.txt')).readlines()
@@ -130,55 +137,9 @@ def fetchMessage(request):
     # Initialize Bot
     if _type == 0:
         topic = request.GET.get('topic')
-        txtfile = ''
-        lines = ''
         hasTense = False
-        if topic == '영화관':
-            txtfile='movie.txt'
-            lines = open(static(txtfile)).readlines()
-            hasTense = True
-        elif topic == '여행':
-            txtfile='travel.txt'
-            lines = open(static(txtfile)).readlines()
-            hasTense = True
-        elif topic == '건강':
-            lines = open(static('scenario/health.txt')).readlines()
-        elif topic == '3급 일상생활':
-            txtfile='../static/scenario/3/daylife.xlsx'
-            lines = parser('scenario/3/daylife.xlsx').split('\n')
-        elif topic == '3급 건강':
-            txtfile='../static/scenario/3/health.xlsx'
-            lines = parser('scenario/3/health.xlsx').split('\n')
-        elif topic == '3급 교통':
-            txtfile='../static/scenario/3/transportation.xlsx'
-            lines = parser('scenario/3/transportation.xlsx').split('\n')
-        elif topic == '3급 여행':
-            txtfile='../static/scenario/3/travel.xlsx'
-            lines = parser('scenario/3/travel.xlsx').split('\n')
-        elif topic == '4급 일상생활':
-            txtfile='../static/scenario/4/daylife.xlsx'
-            lines = parser('scenario/4/daylife.xlsx').split('\n')
-        elif topic == '4급 건강':
-            txtfile='../static/scenario/4/health.xlsx'
-            lines = parser('scenario/4/health.xlsx').split('\n')
-        elif topic == '4급 쇼핑':
-            txtfile='../static/scenario/4/shopping.xlsx'
-            lines = parser('scenario/4/shopping.xlsx').split('\n')
-        elif topic == '4급 여행':
-            txtfile='../static/scenario/4/travel.xlsx'
-            lines = parser('scenario/4/travel.xlsx').split('\n')
-        elif topic == '5급 음식':
-            txtfile='../static/scenario/5/food.xlsx'
-            lines = parser('scenario/5/food.xlsx').split('\n')
-        elif topic == '5급 학교생활':
-            txtfile='../static/scenario/5/schoollife.xlsx'
-            lines = parser('scenario/5/schoollife.xlsx').split('\n')
-        elif topic == '5급 여행':
-            txtfile='../static/scenario/5/travel.xlsx'
-            lines = parser('scenario/5/travel.xlsx').split('\n')
-        elif topic == '5급 날씨':
-            txtfile='../static/scenario/5/weather.xlsx'
-            lines = parser('scenario/5/weather.xlsx').split('\n')
+        txtfile = 'scenario/' + Filename.objects.get(topic=topic+".xlsx").filename
+        lines = parser(txtfile).split('\n')
         bot = Bot(line=lines)
         bot.hasTense = hasTense
         msg = [bot.lines[bot.index]]
@@ -326,52 +287,8 @@ def process_msg(msgs, choice):
 
 def fetchActivity(request):
     topic = request.GET.get('topic')
-    txtfile = ''
-    if topic == '영화관':
-        txtfile='../static/movie.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '여행':
-        txtfile='../static/travel.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '건강':
-        txtfile='../static/scenario/health.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '3급 일상생활':
-        txtfile='../static/scenario/3/daylife.xlsx'
-        lines = parser('scenario/3/daylife.xlsx').split('\n')
-    elif topic == '3급 건강':
-        txtfile='../static/scenario/3/health.xlsx'
-        lines = parser('scenario/3/health.xlsx').split('\n')
-    elif topic == '3급 교통':
-        txtfile='../static/scenario/3/transportation.xlsx'
-        lines = parser('scenario/3/transportation.xlsx').split('\n')
-    elif topic == '3급 여행':
-        txtfile='../static/scenario/3/travel.xlsx'
-        lines = parser('scenario/3/travel.xlsx').split('\n')
-    elif topic == '4급 일상생활':
-        txtfile='../static/scenario/4/daylife.xlsx'
-        lines = parser('scenario/4/daylife.xlsx').split('\n')
-    elif topic == '4급 건강':
-        txtfile='../static/scenario/4/health.xlsx'
-        lines = parser('scenario/4/health.xlsx').split('\n')
-    elif topic == '4급 쇼핑':
-        txtfile='../static/scenario/4/shopping.xlsx'
-        lines = parser('scenario/4/shopping.xlsx').split('\n')
-    elif topic == '4급 여행':
-        txtfile='../static/scenario/4/travel.xlsx'
-        lines = parser('scenario/4/travel.xlsx').split('\n')
-    elif topic == '5급 음식':
-        txtfile='../static/scenario/5/food.xlsx'
-        lines = parser('scenario/5/food.xlsx').split('\n')
-    elif topic == '5급 학교생활':
-        txtfile='../static/scenario/5/schoollife.xlsx'
-        lines = parser('scenario/5/schoollife.xlsx').split('\n')
-    elif topic == '5급 여행':
-        txtfile='../static/scenario/5/travel.xlsx'
-        lines = parser('scenario/5/travel.xlsx').split('\n')
-    elif topic == '5급 날씨':
-        txtfile='../static/scenario/5/weather.xlsx'
-        lines = parser('scenario/5/weather.xlsx').split('\n')
+    txtfile = 'scenario/' + Filename.objects.get(topic=topic+".xlsx").filename
+    lines = parser(txtfile).split('\n')
     response = extract_vocab(txtfile=txtfile,lines=lines)
     print("Response printing: ")
     print(response)
@@ -380,13 +297,14 @@ def fetchActivity(request):
     for v in response['A']:
         print(v)
         if len(v[0])>1:
-            options = []
-            options.append(v[1])
+            options = set()
+            options.add(v[1])
             while len(options)<3:
                 candidate = random.choice(response['translated'])
                 if candidate != v[1]:
-                    options.append(candidate)
-            random.shuffle(options)
+                    options.add(candidate)
+            options = list(options)
+            random.shuffle(list(options))
             js['response'].append({
                 'type': 'v',
                 'lang': 'kor',
@@ -396,13 +314,14 @@ def fetchActivity(request):
             })
     for v in response['B']:
         if len(v[0])>1:
-            options = []
-            options.append(v[1])
+            options = set()
+            options.add(v[1])
             while len(options)<3:
                 candidate = random.choice(response['translated'])
                 if candidate != v[1]:
-                    options.append(candidate)
-            random.shuffle(options)
+                    options.add(candidate)
+            options = list(options)
+            random.shuffle(list(options))
             js['response'].append({
                 'type': 'v',
                 'lang': 'kor',
@@ -412,13 +331,14 @@ def fetchActivity(request):
             })
     for v in response['C']:
         if len(v[0])>1:
-            options = []
-            options.append(v[1])
+            options = set()
+            options.add(v[1])
             while len(options)<3:
                 candidate = random.choice(response['translated'])
                 if candidate != v[1]:
-                    options.append(candidate)
-            random.shuffle(options)
+                    options.add(candidate)
+            options = list(options)
+            random.shuffle(list(options))
             js['response'].append({
                 'type': 'v',
                 'lang': 'kor',
@@ -436,3 +356,8 @@ def translateToKorean(request):
         'translatedText': translated,
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
+
+def fetchTopic(request):
+    topics = [t['topic'].strip('.xlsx') for t in Filename.objects.values('topic') if t['topic']]
+    topics = random.sample(topics,5)
+    return HttpResponse(json.dumps({'topics':topics}), content_type="application/json")

@@ -3,6 +3,15 @@ import QuestionText from './QuestionText';
 import './ActivityBox.css';
 import { Dimmer, Loader, Button } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import { BASE_URL } from '../configs/costants';
+
+// ActivityBox component renders all activities on the selected topic
+// The activity contents are fetched from the server
+// GET iirtech/fetchActivitiy
+// Parameter
+// topic={topic} - topic is the string in Korean
+
+// activity is matching translated words from Korean to English or vice versa.
 
 class ActivityBox extends React.Component {
   constructor(props) {
@@ -31,29 +40,9 @@ class ActivityBox extends React.Component {
     this.scrollToBottom();
     const {topic} = this.props;
     var t = '';
-    fetch(`iirtech/fetchActivity?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/fetchActivity?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.setState({contents:response['response'],loading:false},() => (console.log(this.state.contents))))
-
-    // const json = [
-    //     {
-    //         type: 'v',
-    //         lang: 'kor',
-    //         content: '영화관',
-    //         options: ['theater', 'shopping mall', 'sports complex'],
-    //         correct: 0,
-    //     },
-    //     {
-    //         type: 'v',
-    //         lang: 'kor',
-    //         content: '제목',
-    //         options: ['subtitle', 'title', 'actor'],
-    //         correct: 1,
-    //     }
-    //   ]
-    //   this.setState({
-    //       contents: json
-    //   })
   }
 
   onCorrectHandler() {

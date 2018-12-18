@@ -2,6 +2,9 @@ import React from 'react';
 import './QuestionText.css';
 import 'semantic-ui-css/semantic.min.css';
 
+// QuestionText renders the content of activities.
+// 
+
 class QuestionText extends React.Component {
   constructor(props) {
     super(props);
