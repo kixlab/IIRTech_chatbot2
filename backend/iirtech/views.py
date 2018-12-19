@@ -75,6 +75,7 @@ class Bot():
         return new_line
     
 
+# closes the bot's log_file for clean writing
 def closeBot(request):
     _userid = str(request.GET['userid'])
     bot = users[_userid]
@@ -85,6 +86,7 @@ def closeBot(request):
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
 
+# appends to the bot's log file.
 def handleLog(request):
     _userid = str(request.GET['userid'])
     _type = int(request.GET['type'])
@@ -100,6 +102,7 @@ def handleLog(request):
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
 
+# updates the bot's tense and sends the guide message
 def chooseTense(request):
     _tense = str(request.GET['tense'])
     _userid = str(request.GET['userid'])
@@ -111,7 +114,58 @@ def chooseTense(request):
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
 
+def initializeBot(request):
+    topic = request.GET.get('topic')
+    txtfile = ''
+    lines = ''
+    hasTense = False
+    
+    if topic == '영화관':
+        txtfile='movie.txt'
+        lines = open(static(txtfile)).readlines()
+        hasTense = True
+    elif topic == '여행':
+        txtfile='travel.txt'
+        lines = open(static(txtfile)).readlines()
+        hasTense = True
+    elif topic == '건강':
+        lines = open(static('scenario/health.txt')).readlines()
+    elif topic == '3급 일상생활':
+        txtfile='scenario/3/daylife.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '3급 건강':
+        txtfile='scenario/3/health3.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '3급 교통':
+        txtfile='scenario/3/transportation.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '3급 여행':
+        txtfile='scenario/3/travel.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '4급 쇼핑':
+        txtfile='scenario/4/shopping.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '5급 학교생활':
+        txtfile='scenario/5/schoollife.txt'
+        lines = open(static(txtfile)).readlines()
+
+    bot = Bot(line=lines)
+    bot.hasTense = hasTense
+    msg = process_msg([bot.lines[bot.index]], 'u')
+    _userid = bot.id
+    users[_userid] = bot
+    js = {
+        "text": msg,
+        "success": 1,
+        "userid": _userid,
+        "hasTense": bot.hasTense,
+    }
+    return HttpResponse(json.dumps(js), content_type="application/json")
+
+
 # Create your views here.
+# Depending on type, chooses the correct file to import the conversation from, or retrieves the next message from the file.
+# Response's type must be properly set.
 def fetchMessage(request):
     """
 
@@ -135,6 +189,76 @@ def fetchMessage(request):
     _userid = str(request.GET['userid'])
     
     # Initialize Bot
+<<<<<<< HEAD
+
+    # if _type == 0:
+    #     topic = request.GET.get('topic')
+    #     txtfile = ''
+    #     lines = ''
+    #     hasTense = False
+    #     if topic == '영화관':
+    #         txtfile='movie.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #         hasTense = True
+    #     elif topic == '여행':
+    #         txtfile='travel.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #         hasTense = True
+    #     elif topic == '건강':
+    #         lines = open(static('scenario/health.txt')).readlines()
+    #     elif topic == '3급 일상생활':
+    #         txtfile='scenario/3/daylife.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #     elif topic == '3급 건강':
+    #         txtfile='scenario/3/health3.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #     elif topic == '3급 교통':
+    #         txtfile='scenario/3/transportation.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #     elif topic == '3급 여행':
+    #         txtfile='scenario/3/travel.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #     # elif topic == '4급 일상생활':
+    #     #     txtfile='../static/scenario/4/daylife.xlsx'
+    #     #     lines = parser('scenario/4/daylife.xlsx').split('\n')
+    #     # elif topic == '4급 건강':
+    #     #     txtfile='../static/scenario/4/health.xlsx'
+    #     #     lines = parser('scenario/4/health.xlsx').split('\n')
+    #     elif topic == '4급 쇼핑':
+    #         txtfile='scenario/4/shopping.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #     # elif topic == '4급 여행':
+    #     #     txtfile='../static/scenario/4/travel.xlsx'
+    #     #     lines = parser('scenario/4/travel.xlsx').split('\n')
+    #     # elif topic == '5급 음식':
+    #     #     txtfile='../static/scenario/5/food.xlsx'
+    #     #     lines = parser('scenario/5/food.xlsx').split('\n')
+    #     elif topic == '5급 학교생활':
+    #         txtfile='scenario/5/schoollife.txt'
+    #         lines = open(static(txtfile)).readlines()
+    #     # elif topic == '5급 여행':
+    #     #     txtfile='../static/scenario/5/travel.xlsx'
+    #     #     lines = parser('scenario/5/travel.xlsx').split('\n')
+    #     # elif topic == '5급 날씨':
+    #     #     txtfile='../static/scenario/5/weather.xlsx'
+    #     #     lines = parser('scenario/5/weather.xlsx').split('\n')
+    #     bot = Bot(line=lines)
+    #     bot.hasTense = hasTense
+    #     msg = process_msg([bot.lines[bot.index]], 'u')
+    #     _userid = bot.id
+    #     users[_userid] = bot
+    #     js = {
+    #         "text": msg,
+    #         "type": 4,
+    #         "success": 1,
+    #         "userid": _userid,
+    #         "nextline": "",
+    #         "original": _text,
+    #         "hasTense": bot.hasTense,
+    #     }
+
+    bot = users[_userid]
+=======
     if _type == 0:
         topic = request.GET.get('topic')
         hasTense = False
@@ -156,32 +280,34 @@ def fetchMessage(request):
         }
     else:
         bot = users[_userid]
+>>>>>>> 01bf2d91a8742da606b715cf105fed0c94ac2083
     
-    _index = int(request.GET['index'])
+    # _index = int(request.GET['index'])
         
     if _type == 2:
-        _questionType = ["어휘","문법","발음","기타"]
-        line = bot.current_line()
-        words = line.split()
-        word = words[int(_text)]
-        _questiontype = _index-1
-        q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
-        q.save()
-        msg = bot.next_line()
-        if msg[-1] == False:
-            js = {
-                "text": [""],
-                "type": 3,
-                "success": 1,
-                "userid": _userid,
-            }
-        else:
-            js = {
-                "text": msg,
-                "type": 0 if (bot.index-1)%2==0 else 2,
-                "success": 1,
-                "userid": _userid,
-            }
+        pass
+        # _questionType = ["어휘","문법","발음","기타"]
+        # line = bot.current_line()
+        # words = line.split()
+        # word = words[int(_text)]
+        # _questiontype = _index-1
+        # q = QuestionType(questionType=_questiontype,questionID=int(_text),dialogueIndex=bot.index)
+        # q.save()
+        # msg = bot.next_line()
+        # if msg[-1] == False:
+        #     js = {
+        #         "text": [""],
+        #         "type": 3,
+        #         "success": 1,
+        #         "userid": _userid,
+        #     }
+        # else:
+        #     js = {
+        #         "text": msg,
+        #         "type": 0 if (bot.index-1)%2==0 else 2,
+        #         "success": 1,
+        #         "userid": _userid,
+        #     }
     elif _type == 1:
         corrected_result = spell_checker.check(_text).as_dict()
         num_errors = corrected_result['errors']
@@ -218,7 +344,7 @@ def fetchMessage(request):
         if msg[-1] == False:
             js = {
                 "text": msg[:-1],
-                "type": 3,
+                "type": 1,
                 "success": 1,
                 "userid": _userid,
                 "nextline": next_line,
@@ -252,6 +378,7 @@ def returnQuestion(request):
     js = {'success': 'success'}
     return HttpResponse(json.dumps(js), content_type="application/json")
 
+# Processes the given message to past or future tense according to the 'choice' parameter
 def process_msg(msgs, choice):
     if jpype.isJVMStarted():
         jpype.attachThreadToJVM()
@@ -275,7 +402,7 @@ def process_msg(msgs, choice):
 
         if 'g' in tags: #추측 미래 시제
             future = korean_parsing.make_future_guess(line_s)
-        else: #의지 미래 시제
+        elif 'w' in tags: #의지 미래 시제
             future = korean_parsing.make_future_will(line_s)
         if choice == 'p':
             processed.append(korean_parsing.make_past(line_s))
@@ -287,8 +414,57 @@ def process_msg(msgs, choice):
 
 def fetchActivity(request):
     topic = request.GET.get('topic')
+<<<<<<< HEAD
+    txtfile = ''
+    if topic == '영화관':
+        txtfile='../static/movie.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '여행':
+        txtfile='../static/travel.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '건강':
+        lines = open(static('scenario/health.txt')).readlines()
+    elif topic == '3급 일상생활':
+        txtfile='scenario/3/daylife.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '3급 건강':
+        txtfile='scenario/3/health3.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '3급 교통':
+        txtfile='scenario/3/transportation.txt'
+        lines = open(static(txtfile)).readlines()
+    elif topic == '3급 여행':
+        txtfile='scenario/3/travel.txt'
+        lines = open(static(txtfile)).readlines()
+    # elif topic == '4급 일상생활':
+    #     txtfile='../static/scenario/4/daylife.xlsx'
+    #     lines = parser('scenario/4/daylife.xlsx').split('\n')
+    # elif topic == '4급 건강':
+    #     txtfile='../static/scenario/4/health.xlsx'
+    #     lines = parser('scenario/4/health.xlsx').split('\n')
+    elif topic == '4급 쇼핑':
+        txtfile='scenario/4/shopping.txt'
+        lines = open(static(txtfile)).readlines()
+    # elif topic == '4급 여행':
+    #     txtfile='../static/scenario/4/travel.xlsx'
+    #     lines = parser('scenario/4/travel.xlsx').split('\n')
+    # elif topic == '5급 음식':
+    #     txtfile='../static/scenario/5/food.xlsx'
+    #     lines = parser('scenario/5/food.xlsx').split('\n')
+    elif topic == '5급 학교생활':
+        txtfile='scenario/5/schoollife.txt'
+        lines = open(static(txtfile)).readlines()
+    #     lines = parser('scenario/5/schoollife.xlsx').split('\n')
+    # elif topic == '5급 여행':
+    #     txtfile='../static/scenario/5/travel.xlsx'
+    #     lines = parser('scenario/5/travel.xlsx').split('\n')
+    # elif topic == '5급 날씨':
+    #     txtfile='../static/scenario/5/weather.xlsx'
+    #     lines = parser('scenario/5/weather.xlsx').split('\n')
+=======
     txtfile = 'scenario/' + Filename.objects.get(topic=topic+".xlsx").filename
     lines = parser(txtfile).split('\n')
+>>>>>>> 01bf2d91a8742da606b715cf105fed0c94ac2083
     response = extract_vocab(txtfile=txtfile,lines=lines)
     print("Response printing: ")
     print(response)
@@ -349,7 +525,7 @@ def fetchActivity(request):
     print(js)
     return HttpResponse(json.dumps(js), content_type="application/json")
 
-def translateToKorean(request):
+def translateToEnglish(request):
     _text = str(request.GET['text'])
     translated = Papago('nmt', _text, 'ko')
     js = {
