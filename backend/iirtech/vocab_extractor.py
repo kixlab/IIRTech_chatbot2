@@ -112,13 +112,13 @@ def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
             level = ''
             if v in vocab_by_level['A']:
                 level = 'A'
-                vocab_from_dialogue_by_level['A'].append((v.lower(),translated))
+                vocab_from_dialogue_by_level['A'].append((v.lower(),translated.lower()))
             elif v in vocab_by_level['B']:
                 level = 'B'
-                vocab_from_dialogue_by_level['B'].append((v.lower(),translated))
+                vocab_from_dialogue_by_level['B'].append((v.lower(),translated.lower()))
             elif v in vocab_by_level['C']:
                 level = 'C'
-                vocab_from_dialogue_by_level['C'].append((v.lower(),translated))
+                vocab_from_dialogue_by_level['C'].append((v.lower(),translated.lower()))
             vocab, created = VocabList.objects.get_or_create(
                 filename=filename,
                 word=v.lower(),
@@ -132,14 +132,14 @@ def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
         print(vList)
         vList_levelA = vList.filter(level='A')
         for v in vList_levelA:
-            vocab_from_dialogue_by_level['A'].append((v.word,v.translated))
+            vocab_from_dialogue_by_level['A'].append((v.word,v.translated.lower()))
         vList_levelB = vList.filter(level='B')
         for v in vList_levelB:
-            vocab_from_dialogue_by_level['B'].append((v.word,v.translated))
+            vocab_from_dialogue_by_level['B'].append((v.word,v.translated.lower()))
         vList_levelC = vList.filter(level='C')
         for v in vList_levelC:
-            vocab_from_dialogue_by_level['C'].append((v.word,v.translated))
+            vocab_from_dialogue_by_level['C'].append((v.word,v.translated.lower()))
         for v in vList:
-            vocab_from_dialogue_by_level['translated'].append(v.translated)
+            vocab_from_dialogue_by_level['translated'].append(v.translated.lower())
     return vocab_from_dialogue_by_level
 #     print (Papago('smt',v,'ko'),v)

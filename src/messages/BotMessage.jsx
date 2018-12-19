@@ -1,6 +1,7 @@
 import React from 'react';
 import './BotMessage.css';
-import { Button } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react';
+import { BASE_URL } from '../configs/costants';
 
 class BotMessage extends React.Component {
   constructor(props){
@@ -14,14 +15,14 @@ class BotMessage extends React.Component {
   }
 
   translate(text) {
-    fetch(`iirtech/translateToEnglish?text=${text}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/translateToEnglish?text=${text}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.setState({translatedText:response['translatedText']}))
   }
 
   translateClickHandler() {
     const _text = this.props.content
-    fetch(`iirtech/translateToEnglish?text=${_text}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/translateToEnglish?text=${_text}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.setState(
           {

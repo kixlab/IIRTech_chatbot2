@@ -8,6 +8,7 @@ class QuestionType(models.Model):
 
 class Filename(models.Model):
     filename = models.TextField()
+    topic = models.TextField()
 
 class VocabList(models.Model):
     filename = models.ForeignKey(Filename, on_delete=models.CASCADE)

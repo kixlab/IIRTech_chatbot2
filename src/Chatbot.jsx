@@ -2,6 +2,7 @@ import React from 'react';
 import "./Chatbot.css";
 import MessageBox from './MessageBox';
 import InputBox from './InputBox';
+import { BASE_URL } from './configs/costants';
 
 class Chatbot extends React.Component {
   constructor(props) {
@@ -40,14 +41,14 @@ class Chatbot extends React.Component {
   }
 
   initBot(topic) {
-    fetch(`iirtech/initializeBot?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}iirtech/initializeBot?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response =>this.handleInit(response));
   }
 
   // ends the session by closing the log file
   closeBot() {
-    fetch(`iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => console.log("Close: ", response.success))
   }
@@ -56,23 +57,31 @@ class Chatbot extends React.Component {
   addLog(msg) {
     const type = msg.type;
     const content = msg.content;
-    fetch(`iirtech/handleLog?type=${type}&content=${content}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/handleLog?type=${type}&content=${content}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => console.log("Logging: ", response.success))
   }
 
   // updates the bot's tense and retrieves the guide message (two different messages for past and future)
   chooseTense(tense) {
-    fetch(`iirtech/chooseTense?tense=${tense}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/chooseTense?tense=${tense}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleTense(response))
   }
 
   // sends a message to python side for retrieval of bot's next utterance
   sendMessage(text, type, index, userid) {
-    fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
-      .then(res => res.json())
-      .then(response => this.handleResponse(response))
+    if (type===0){
+      const {topic} = this.props;
+      fetch(`${BASE_URL}/iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}&topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => this.handleResponse(response))
+    }
+    else{
+      fetch(`${BASE_URL}/iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => this.handleResponse(response))
+    }
   }
 
   // sets the bot's tense and append the guide message to the message box.
@@ -105,7 +114,7 @@ class Chatbot extends React.Component {
       ])
     }
 
-    fetch(`iirtech/fetchMessage?text=${""}&type=${1}&index=${0}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/fetchMessage?text=${""}&type=${1}&index=${0}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleResponse(response))
   }

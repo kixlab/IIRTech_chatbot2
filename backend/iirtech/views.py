@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from iirtech.models import QuestionType
-import json, random
+from iirtech.models import QuestionType, Filename
+import json, random, glob
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import os, uuid
 import jpype
@@ -20,6 +20,13 @@ from .hanspell import spell_checker
 from .find_similar import match_nouns
 
 STATIC_PATH = './backend/static/'
+for filepath in glob.glob('./static/scenario/**/*.xlsx'):
+    filename = filepath.strip('./static/scenario/')
+    topic = '%s급_%s' %(filename[0], filename[2:])
+    f, created = Filename.objects.get_or_create(
+        filename=filename,
+        topic=topic
+    )
 
 lines = open(static('travel.txt')).readlines()
 # lines = open(static('scenario.txt')).readlines()
@@ -182,6 +189,7 @@ def fetchMessage(request):
     _userid = str(request.GET['userid'])
     
     # Initialize Bot
+<<<<<<< HEAD
 
     # if _type == 0:
     #     topic = request.GET.get('topic')
@@ -250,6 +258,29 @@ def fetchMessage(request):
     #     }
 
     bot = users[_userid]
+=======
+    if _type == 0:
+        topic = request.GET.get('topic')
+        hasTense = False
+        txtfile = 'scenario/' + Filename.objects.get(topic=topic+".xlsx").filename
+        lines = parser(txtfile).split('\n')
+        bot = Bot(line=lines)
+        bot.hasTense = hasTense
+        msg = [bot.lines[bot.index]]
+        _userid = bot.id
+        users[_userid] = bot
+        js = {
+            "text": msg,
+            "type": 4,
+            "success": 1,
+            "userid": _userid,
+            "nextline": "",
+            "original": _text,
+            "hasTense": bot.hasTense,
+        }
+    else:
+        bot = users[_userid]
+>>>>>>> 01bf2d91a8742da606b715cf105fed0c94ac2083
     
     # _index = int(request.GET['index'])
         
@@ -383,6 +414,7 @@ def process_msg(msgs, choice):
 
 def fetchActivity(request):
     topic = request.GET.get('topic')
+<<<<<<< HEAD
     txtfile = ''
     if topic == '영화관':
         txtfile='../static/movie.txt'
@@ -429,6 +461,10 @@ def fetchActivity(request):
     # elif topic == '5급 날씨':
     #     txtfile='../static/scenario/5/weather.xlsx'
     #     lines = parser('scenario/5/weather.xlsx').split('\n')
+=======
+    txtfile = 'scenario/' + Filename.objects.get(topic=topic+".xlsx").filename
+    lines = parser(txtfile).split('\n')
+>>>>>>> 01bf2d91a8742da606b715cf105fed0c94ac2083
     response = extract_vocab(txtfile=txtfile,lines=lines)
     print("Response printing: ")
     print(response)
@@ -437,13 +473,14 @@ def fetchActivity(request):
     for v in response['A']:
         print(v)
         if len(v[0])>1:
-            options = []
-            options.append(v[1])
+            options = set()
+            options.add(v[1])
             while len(options)<3:
                 candidate = random.choice(response['translated'])
                 if candidate != v[1]:
-                    options.append(candidate)
-            random.shuffle(options)
+                    options.add(candidate)
+            options = list(options)
+            random.shuffle(list(options))
             js['response'].append({
                 'type': 'v',
                 'lang': 'kor',
@@ -453,13 +490,14 @@ def fetchActivity(request):
             })
     for v in response['B']:
         if len(v[0])>1:
-            options = []
-            options.append(v[1])
+            options = set()
+            options.add(v[1])
             while len(options)<3:
                 candidate = random.choice(response['translated'])
                 if candidate != v[1]:
-                    options.append(candidate)
-            random.shuffle(options)
+                    options.add(candidate)
+            options = list(options)
+            random.shuffle(list(options))
             js['response'].append({
                 'type': 'v',
                 'lang': 'kor',
@@ -469,13 +507,14 @@ def fetchActivity(request):
             })
     for v in response['C']:
         if len(v[0])>1:
-            options = []
-            options.append(v[1])
+            options = set()
+            options.add(v[1])
             while len(options)<3:
                 candidate = random.choice(response['translated'])
                 if candidate != v[1]:
-                    options.append(candidate)
-            random.shuffle(options)
+                    options.add(candidate)
+            options = list(options)
+            random.shuffle(list(options))
             js['response'].append({
                 'type': 'v',
                 'lang': 'kor',
@@ -493,3 +532,8 @@ def translateToEnglish(request):
         'translatedText': translated,
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
+
+def fetchTopic(request):
+    topics = [t['topic'].strip('.xlsx') for t in Filename.objects.values('topic') if t['topic']]
+    topics = random.sample(topics,5)
+    return HttpResponse(json.dumps({'topics':topics}), content_type="application/json")
