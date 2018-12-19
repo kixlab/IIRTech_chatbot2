@@ -24,7 +24,7 @@ Upon the selection of topic, activities are rendered by ActivityBox. Then, Chatb
 
 ### Quick Note
 
-Please refer to [a relative link](chatbot_api.md) for more information on API usage.
+Please refer to [Chatbot API Markdown](chatbot_api.md) for more information on API usage.
 
 #### Tested with Python v3.6.2
 #### If you are seeing any python ImportError, run the following 

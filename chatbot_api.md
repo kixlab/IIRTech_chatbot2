@@ -1,8 +1,8 @@
-# Chatbot API
+# README for Chatbot API
 
 ---
 ## Base Url
-- 
+- /iirtech
 ---
 ## 주제 선택
 > 사용자가 대화를 나눌 주제를 선택한다.
@@ -11,6 +11,23 @@
 | method |  resource  |     
 | :----: | :--------: |
 |  get   | /fetchTopic |
+
+- Success Response(Status 200)
+  ```
+  {
+      "topics": ["3급_일상생활","3급_건강","4급_쇼핑","5급_학교생활"],
+  }
+  ```
+  - 반환 값 설명
+    - topics: 사용자가 선택할 수 있는 주제 목록. (반환되는 주제 갯수의 초기값은 5로 설정되어 있음)
+---
+## 어휘 문제 가져오기
+> 사용자가 대화를 나누기에 앞서 학습해야 할 어휘에 대한 액티비티를 가져온다.
+
+### Request
+| method |  resource  |     
+| :----: | :--------: |
+|  get   | /fetchActivity |
 
 - parameter
     - topic: 유저가 선택한 주제
@@ -24,17 +41,22 @@
 - Success Response(Status 200)
   ```
   {
-      "text": ["안녕하세요", "반가워요"],
-      "success": 1,
-      "userid": "blahblah",
-      "hasTense": False,
+        "response": [{
+                'type': 'v',
+                'lang': 'kor',
+                'content': '공원',
+                'options': ['park', 'theatre', 'bedroom'],
+                'correct': 0,
+            }]
   }
   ```
   - 반환 값 설명
-    - text: 챗봇의 다음 발화 리스트
-    - success: 성공 여부
-    - userid: 유저 아이디
-    - hasTense: 시제 변환 가능 여부
+    - response: JSON 형식의 어휘 문제 리스트
+      - type: 'v' (어휘) / 'g' (문법) - 현재 모든 문제는 어휘 문제로 구현됨
+      - lang: 'kor' / 'eng' - 사용자에게 주어지는 타겟 어휘가 한글 또는 영어인지 구분
+      - content: 타겟 어휘
+      - options: 타겟 어휘의 정확한 번역 및 그 외의 객관식 distractor 두 단어를 포함한 리스트
+      - correct: options 리스트에서 정답의 인덱스
 ---
 ## 챗봇 초기화
 > 처음 챗봇을 시작할 때 초기값을 지정해준다.
