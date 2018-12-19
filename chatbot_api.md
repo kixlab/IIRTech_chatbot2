@@ -3,7 +3,38 @@
 ---
 ## Base Url
 - 
+---
+## 주제 선택
+> 사용자가 대화를 나눌 주제를 선택한다.
 
+### Request
+| method |  resource  |     
+| :----: | :--------: |
+|  get   | /fetchTopic |
+
+- parameter
+    - topic: 유저가 선택한 주제
+        - 현재 주제 리스트:
+            - 3급 일상생활
+            - 3급 건강
+            - 4급 쇼핑
+            - 5급 학교생활
+            - 이외 backend/static/scenario 디렉토리 참조
+
+- Success Response(Status 200)
+  ```
+  {
+      "text": ["안녕하세요", "반가워요"],
+      "success": 1,
+      "userid": "blahblah",
+      "hasTense": False,
+  }
+  ```
+  - 반환 값 설명
+    - text: 챗봇의 다음 발화 리스트
+    - success: 성공 여부
+    - userid: 유저 아이디
+    - hasTense: 시제 변환 가능 여부
 ---
 ## 챗봇 초기화
 > 처음 챗봇을 시작할 때 초기값을 지정해준다.

@@ -20,24 +20,11 @@ To run the application, you need two running shells.
   - Chatbot
 
 Intially, in the MainScreen component users select one topic from given a list of dialogue topics.
-Upon the selection of topic, activities are rendered by ActivityBox. Then, Chatbot is rendered after all the activities are completed. See each of the component file for more information.
-
-#### Request method of components
-
-| **MainScreen** ||
-|-------|---------|
-| url    | `iirtech/fetchTopic`|
-| method | `GET`               |
-| response | success - `Code: 200 / Content: json of list of topics` |
-
-| **ActivityBox** ||
-|-------|---------|
-| url    | `iirtech/fetchActivity`|
-| method | `GET` |
-| parameters | `topic={topic} - topic is the string in Korean` |
-| response | success - `Code: 200 / Content: json of list of activities` |
+Upon the selection of topic, activities are rendered by ActivityBox. Then, Chatbot is rendered after all the activities are completed. See each of the component file for more information. 
 
 ### Quick Note
+
+Please refer to [a relative link](chatbot_api.md) for more information on API usage.
 
 #### Tested with Python v3.6.2
 #### If you are seeing any python ImportError, run the following 
