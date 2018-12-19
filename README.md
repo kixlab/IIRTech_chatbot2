@@ -23,36 +23,19 @@ Intially, in the MainScreen component users select one topic from given a list o
 Upon the selection of topic, activities are rendered by ActivityBox. Then, Chatbot is rendered after all the activities are completed. See each of the component file for more information.
 
 #### Request method of components
-**MainScreen**
-* url 
 
-`iirtech/fetchTopic`
+| **MainScreen** ||
+|-------|---------|
+| url    | `iirtech/fetchTopic`|
+| method | `GET`               |
+| response | success - `Code: 200 / Content: json of list of topics` |
 
-* method
-  
-`GET`
-
-* Success Response
-
-`Code: 200 / Content: json of list of topics`
-
-
-**ActivityBox**
-* url 
-
-`iirtech/fetchActivity`
-
-* method
-  
-`GET` 
-
-* URL params 
-  
-`topic={topic} - topic is the string in Korean`
-
-* Success Response
-
-`Code: 200 / Content: json of list of activities`
+| **ActivityBox** ||
+|-------|---------|
+| url    | `iirtech/fetchActivity`|
+| method | `GET` |
+| parameters | `topic={topic} - topic is the string in Korean` |
+| response | success - `Code: 200 / Content: json of list of activities` |
 
 ### Quick Note
 
