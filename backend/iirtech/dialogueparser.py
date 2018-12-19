@@ -13,7 +13,7 @@ args = parser.parse_args()
 vocab_list = []
 rank = {}
 
-df = pandas.read_excel('vocab.xls')
+df = pandas.read_excel('vocab.xlsx')
 
 rank = [int(r) if not isnan(r) else 6000 for r in df['순위']]
 vocab_list = [str(w).strip() for w in df['단어']]

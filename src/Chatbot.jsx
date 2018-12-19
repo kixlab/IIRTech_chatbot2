@@ -7,15 +7,20 @@ class Chatbot extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageLog: [],
-      currentMessage: "",
-      userid: '',
-      tense: null,
-      buttonDisabled: false,
-      revise: false,
+      messageLog: [{
+        type: 2,
+        content: "꼭 문장부호(sentence punctuation: .?!)를 쓰세요.",
+        format: false,
+      }],                     // List of messages so far
+      currentMessage: "",     // Message in the text input box
+      userid: '',             // Unique uuid for the session
+      tense: null,            // Tense chosen by the user
+      buttonDisabled: false,  // Whether the 'Send' button is disabled
+      revise: false,          // Boolean value for revision, to add the grammar correction
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleInit = this.handleInit.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
     this.handleTense = this.handleTense.bind(this);
@@ -30,15 +35,24 @@ class Chatbot extends React.Component {
     const type = 0;
     const index = -1;
     const userid = '';
-    this.sendMessage(text, type, index, userid);
+    const {topic} = this.props;
+    this.initBot(topic);
   }
 
+  initBot(topic) {
+    fetch(`iirtech/initializeBot?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
+      .then(res => res.json())
+      .then(response =>this.handleInit(response));
+  }
+
+  // ends the session by closing the log file
   closeBot() {
     fetch(`iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => console.log("Close: ", response.success))
   }
 
+  // writes the current message to the log
   addLog(msg) {
     const type = msg.type;
     const content = msg.content;
@@ -47,26 +61,21 @@ class Chatbot extends React.Component {
       .then(response => console.log("Logging: ", response.success))
   }
 
+  // updates the bot's tense and retrieves the guide message (two different messages for past and future)
   chooseTense(tense) {
     fetch(`iirtech/chooseTense?tense=${tense}&userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => this.handleTense(response))
   }
 
+  // sends a message to python side for retrieval of bot's next utterance
   sendMessage(text, type, index, userid) {
-    if (type===0){
-      const {topic} = this.props;
-      fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}&topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
-        .then(res => res.json())
-        .then(response => this.handleResponse(response))
-    }
-    else{
-      fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
-        .then(res => res.json())
-        .then(response => this.handleResponse(response))
-    }
+    fetch(`iirtech/fetchMessage?text=${text}&type=${type}&index=${index}&userid=${userid}`, {"Access-Control-Allow-Origin":"*"})
+      .then(res => res.json())
+      .then(response => this.handleResponse(response))
   }
 
+  // sets the bot's tense and append the guide message to the message box.
   handleTense(response) {
     this.setState({
       tense: response.tense
@@ -101,8 +110,49 @@ class Chatbot extends React.Component {
       .then(response => this.handleResponse(response))
   }
 
+  handleInit(response) {
+    const text = response.text;
+    const userid = response.userid;
+    const success = parseInt(response.success,10);
+
+    if (!success) return;
+    if (!this.state.userid) this.setState({userid: userid});
+    
+    for(let i = 0; i < text.length; i++){
+      this.appendMessage([
+        {
+          type: 0,
+          content: text[i],
+          format: false,
+        }
+      ])
+    }
+    if(response.hasTense){
+      this.appendMessage([
+        {
+          type: 2,
+          content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
+          format: false,
+        },
+        {
+          type: 2,
+          content: "네, 아니요로 답해봅시다.",
+          format: false,
+        }
+      ])
+      this.appendMessage([
+        {
+          type:3,
+          content: "Choice Message"
+        }
+      ])
+    }
+  }
+
+  // Handler for the data sent from the python server.
+  // Gets the relevant information and appends the data to the message box in the correct format
   handleResponse(response) {
-    const original = response.original
+    const original = response.original;
     const text = response.text;
     const userline = response.nextline;
     const type = parseInt(response.type,10);
@@ -128,7 +178,7 @@ class Chatbot extends React.Component {
 
     if (!success) return;
     if (!this.state.userid) this.setState({userid: userid});
-    if (type === 3){ // Exit current session and print message
+    if (type === 1) { // Exit current session and print message
       if (original != ""){
         this.appendMessage([
           {
@@ -160,38 +210,38 @@ class Chatbot extends React.Component {
       });
       this.closeBot()
     }
-    else if(type === 4) {
-      for(let i = 0; i < text.length; i++){
-        this.appendMessage([
-          {
-            type: 0,
-            content: text[i],
-            format: false,
-          }
-        ])
-      }
-      if(response.hasTense){
-        this.appendMessage([
-          {
-            type: 2,
-            content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
-            format: false,
-          },
-          {
-            type: 2,
-            content: "네, 아니요로 답해봅시다.",
-            format: false,
-          }
-        ])
-        this.appendMessage([
-          {
-            type:3,
-            content: "Choice Message"
-          }
-        ])
-      }
-    }
-    else{
+    // else if(type === 4) {
+    //   for(let i = 0; i < text.length; i++){
+    //     this.appendMessage([
+    //       {
+    //         type: 0,
+    //         content: text[i],
+    //         format: false,
+    //       }
+    //     ])
+    //   }
+    //   if(response.hasTense){
+    //     this.appendMessage([
+    //       {
+    //         type: 2,
+    //         content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
+    //         format: false,
+    //       },
+    //       {
+    //         type: 2,
+    //         content: "네, 아니요로 답해봅시다.",
+    //         format: false,
+    //       }
+    //     ])
+    //     this.appendMessage([
+    //       {
+    //         type:3,
+    //         content: "Choice Message"
+    //       }
+    //     ])
+    //   }
+    // }
+    else {
       if (original != ""){
         this.appendMessage([
           {
@@ -223,6 +273,7 @@ class Chatbot extends React.Component {
     }
   }
 
+  // Handler for the case when the user chooses the tense.
   handleTenseChoice(tense) {
     this.chooseTense(tense)
     this.setState({
@@ -230,13 +281,14 @@ class Chatbot extends React.Component {
     })
   }
 
-  // Method to keep track of the current message in the textarea
+  // Handler to keep track of the current message in the textarea
   handleChange(newText) {
     this.setState({
       currentMessage: newText,
     });
   }
 
+  // appends the message to the state messageLog list, and writes it to the log by calling addLog function
   appendMessage(msg) {
     // msg:
       // List of json
@@ -280,7 +332,7 @@ class Chatbot extends React.Component {
 
   render() {
     return (
-      <div className="container chatbot col-8">
+      <div className="container chatbot col-8" /*style={{padding:'5px 0'}}*/>
         <MessageBox messageLog={this.state.messageLog} handleClick={this.handleTenseChoice} done={this.state.tense!=null} chosen={this.state.tense==='p'?0:1} revise={this.state.revise}/>
         <InputBox handleChange={this.handleChange} handleClick = {this.handleClick} newText={this.state.currentMessage} disabled={this.state.buttonDisabled}/>
       </div>

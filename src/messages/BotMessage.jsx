@@ -14,14 +14,14 @@ class BotMessage extends React.Component {
   }
 
   translate(text) {
-    fetch(`iirtech/translateToKorean?text=${text}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`iirtech/translateToEnglish?text=${text}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.setState({translatedText:response['translatedText']}))
   }
 
   translateClickHandler() {
     const _text = this.props.content
-    fetch(`iirtech/translateToKorean?text=${_text}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`iirtech/translateToEnglish?text=${_text}`, {"Access-Control-Allow-Origin":"*"})
         .then(res => res.json())
         .then(response => this.setState(
           {
