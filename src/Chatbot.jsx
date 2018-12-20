@@ -170,18 +170,39 @@ class Chatbot extends React.Component {
     const errNum = parseInt(response.errorcount,10);
     const correctText = response.corrected;
     const vocabList = this.props.vocabList;
+    const vocabPOS = this.props.vocabPOS;
     
     var highlightList =[];
     var suggestMessage = "";
 
     if (userline != "") {
-      for (var i = 0; i < vocabList.length; i++){
-        if (userline.includes(vocabList[i]['korWord'])){
-          highlightList.push(i);
-          suggestMessage += vocabList[i]['korWord'] + ', ';
-        }
-      }
-      suggestMessage = suggestMessage.substring(0, suggestMessage.length-2)
+      var line_pos=[]
+      fetch(`${BASE_URL}/iirtech/getPOS?vocab=${userline}`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => line_pos.push(response['POS']))
+        .then(function(value){
+          console.log(line_pos);
+          for (var i = 0; i < vocabList.length; i++){
+            if (userline.includes(vocabList[i]['korWord'])){
+              highlightList.push(i);
+              suggestMessage += vocabList[i]['korWord'] + ', ';
+            }
+          }
+    
+          for (var i = 0; i < vocabPOS.length; i++) {
+            if (highlightList.includes(i)) {
+              continue;
+            }
+    
+            for (var j = 0; j < line_pos[0].length; j++) {
+              if (vocabPOS[i][0] == line_pos[0][j]) {
+                highlightList.push(i);
+                suggestMessage += vocabList[i]['korWord'] + ', ';
+              }
+            }
+          }
+          suggestMessage = suggestMessage.substring(0, suggestMessage.length-2) 
+        });
     }
     this.props.highlightHandler(highlightList)
 

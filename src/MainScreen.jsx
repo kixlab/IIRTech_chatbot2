@@ -19,6 +19,7 @@ class MainScreen extends React.Component {
         this.state = {
             active: false, // boolean - active checks whether the activitiy is completed on the selected topic
             vocabList: [], // list of string - vocabulary list of the selected topic
+            vocabPOS: [], // list of POS-tagged vocabulary
             highlightList: [],
             topic: "NOT_SELECTED", // string - the selected topic / NOT_SELECTED if none of the topic is yet selected
             topicList: []
@@ -38,6 +39,13 @@ class MainScreen extends React.Component {
         const newVocabList = this.state.vocabList.slice();
         newVocabList.push({'korWord':korWord, 'engWord': engWord});
         this.setState({vocabList: newVocabList}); 
+
+        const newVocabPOS = this.state.vocabPOS.slice();
+        fetch(`${BASE_URL}/iirtech/getPOS?vocab=${korWord}`, {"Access-Control-Allow-Origin":"*"})
+        .then(res => res.json())
+        .then(response => newVocabPOS.push(response['POS']));
+        console.log(newVocabPOS);
+        this.setState({vocabPOS: newVocabPOS});
     }
 
     onProceedHandler() {
@@ -49,12 +57,12 @@ class MainScreen extends React.Component {
     }
 
     render() {
-        const { topic, active, vocabList, highlightList, topicList } = this.state;
+        const { topic, active, vocabList, vocabPOS, highlightList, topicList } = this.state;
         return (
             <div className="mainscreen row">
                 {
                     topic !== 'NOT_SELECTED' ?
-                    (active ? <Chatbot topic={topic} vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox topic={topic} addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
+                    (active ? <Chatbot topic={topic} vocabPOS = {vocabPOS} vocabList={vocabList} highlightHandler={this.highlightHandler}/> : <ActivityBox topic={topic} addVocab={this.addVocab} onProceedHandler={this.onProceedHandler}/>)
                     :
                     <div className="container chatbot col-8 text-center" style={{width: '80%', paddingTop:'10%'}}>
                             <h2 style={{fontWeight: '400'}}>대화를 나눌 주제를 골라주세요.</h2>
