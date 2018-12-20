@@ -13,12 +13,17 @@ import datetime
 # Korean parser
 from . import korean_parsing
 from . import korean_analyzer
+from konlpy.tag import Kkma
 from .vocab_extractor import extract_vocab
 from .vocab_extractor import Papago
 
 from .hanspell import spell_checker
 from .find_similar import match_nouns
 from .dialogueInitializer import dialogueInit
+
+kkma = Kkma()
+def analyze_kkma(sent):
+    return kkma.pos(sent)
 
 dialogueInit()
 
@@ -43,11 +48,14 @@ class Bot():
         self.index += 1
         line = []
         if self.index >= len(self.lines):
-            return False
+            return [False], ""
         curr_line = self.lines[self.index]
         while not 'b' in curr_line[1:curr_line.find('>')] and self.index < len(self.lines):
             self.index += 1
-            curr_line = self.lines[self.index]
+            if self.index < len(self.lines):
+                curr_line = self.lines[self.index]
+            else:
+                line.append(False)
         while 'b' in curr_line[1:curr_line.find('>')] and self.index < len(self.lines):
             line.append(self.replace_words(curr_line))
             self.index += 1
@@ -117,6 +125,7 @@ def initializeBot(request):
     hasTense = False
     txtfile = 'scenario/' + topic[0] + '/' + topic[3:] + '.xlsx'
     lines = parser(txtfile).split('\n')
+    print(lines)
     # if topic == '영화관':
     #     txtfile='movie.txt'
     #     lines = open(static(txtfile)).readlines()
@@ -159,6 +168,17 @@ def initializeBot(request):
     }
     return HttpResponse(json.dumps(js), content_type="application/json")
 
+def getPOS(request):
+    if jpype.isJVMStarted():
+        jpype.attachThreadToJVM()
+    _word = str(request.GET['vocab'])
+    POS = kkma.pos(_word)
+    word_list = [x[0] for x in POS]
+    print(word_list)
+    js = {
+        "POS": word_list,
+    }
+    return HttpResponse(json.dumps(js), content_type="application/json")
 
 # Create your views here.
 # Depending on type, chooses the correct file to import the conversation from, or retrieves the next message from the file.
@@ -325,13 +345,13 @@ def process_msg(msgs, choice):
             continue
         # print(line_s[1:])
 
-        if 'g' in tags: #추측 미래 시제
-            future = korean_parsing.make_future_guess(line_s)
-        elif 'w' in tags: #의지 미래 시제
-            future = korean_parsing.make_future_will(line_s)
         if choice == 'p':
             processed.append(korean_parsing.make_past(line_s))
         elif choice == 'f':
+            if 'g' in tags: #추측 미래 시제
+                future = korean_parsing.make_future_guess(line_s)
+            elif 'w' in tags: #의지 미래 시제
+                future = korean_parsing.make_future_will(line_s)
             processed.append(future)
         else:
             processed.append(line_s)

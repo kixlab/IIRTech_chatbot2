@@ -11,4 +11,5 @@ urlpatterns = [
     url('translateToEnglish', views.translateToEnglish, name="translateToEnglish"),
     url('handleLog', views.handleLog, name="handleLog"),
     url('closeBot', views.closeBot, name="closeBot"),
+    url('getPOS', views.getPOS, name="getPOS"),
 ]
