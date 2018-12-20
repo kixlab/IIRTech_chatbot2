@@ -1,9 +1,6 @@
 # README for Chatbot API
-
----
 ## Base Url
 - /iirtech
----
 ## 주제 선택
 > 사용자가 대화를 나눌 주제를 선택한다.
 

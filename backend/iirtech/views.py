@@ -4,7 +4,7 @@ from iirtech.models import QuestionType, Filename
 import json, random, glob
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import os, uuid
-import jpype
+import jpype, requests
 
 from .scenario_parser import parser
 import datetime
@@ -18,15 +18,11 @@ from .vocab_extractor import Papago
 
 from .hanspell import spell_checker
 from .find_similar import match_nouns
+from .dialogueInitializer import dialogueInit
+
+dialogueInit()
 
 STATIC_PATH = './backend/static/'
-for filepath in glob.glob('./static/scenario/**/*.xlsx'):
-    filename = filepath.strip('./static/scenario/')
-    topic = '%s급_%s' %(filename[0], filename[2:])
-    f, created = Filename.objects.get_or_create(
-        filename=filename,
-        topic=topic
-    )
 
 lines = open(static('travel.txt')).readlines()
 # lines = open(static('scenario.txt')).readlines()
@@ -119,35 +115,36 @@ def initializeBot(request):
     txtfile = ''
     lines = ''
     hasTense = False
-    
-    if topic == '영화관':
-        txtfile='movie.txt'
-        lines = open(static(txtfile)).readlines()
-        hasTense = True
-    elif topic == '여행':
-        txtfile='travel.txt'
-        lines = open(static(txtfile)).readlines()
-        hasTense = True
-    elif topic == '건강':
-        lines = open(static('scenario/health.txt')).readlines()
-    elif topic == '3급 일상생활':
-        txtfile='scenario/3/daylife.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '3급 건강':
-        txtfile='scenario/3/health3.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '3급 교통':
-        txtfile='scenario/3/transportation.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '3급 여행':
-        txtfile='scenario/3/travel.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '4급 쇼핑':
-        txtfile='scenario/4/shopping.txt'
-        lines = open(static(txtfile)).readlines()
-    elif topic == '5급 학교생활':
-        txtfile='scenario/5/schoollife.txt'
-        lines = open(static(txtfile)).readlines()
+    txtfile = 'scenario/' + topic[0] + '/' + topic[3:] + '.xlsx'
+    lines = parser(txtfile).split('\n')
+    # if topic == '영화관':
+    #     txtfile='movie.txt'
+    #     lines = open(static(txtfile)).readlines()
+    #     hasTense = True
+    # elif topic == '여행':
+    #     txtfile='travel.txt'
+    #     lines = open(static(txtfile)).readlines()
+    #     hasTense = True
+    # elif topic == '건강':
+    #     lines = open(static('scenario/health.txt')).readlines()
+    # elif topic == '3급 일상생활':
+    #     txtfile='scenario/3/daylife.txt'
+    #     lines = open(static(txtfile)).readlines()
+    # elif topic == '3급 건강':
+    #     txtfile='scenario/3/health3.txt'
+    #     lines = open(static(txtfile)).readlines()
+    # elif topic == '3급 교통':
+    #     txtfile='scenario/3/transportation.txt'
+    #     lines = open(static(txtfile)).readlines()
+    # elif topic == '3급 여행':
+    #     txtfile='scenario/3/travel.txt'
+    #     lines = open(static(txtfile)).readlines()
+    # elif topic == '4급 쇼핑':
+    #     txtfile='scenario/4/shopping.txt'
+    #     lines = open(static(txtfile)).readlines()
+    # elif topic == '5급 학교생활':
+    #     txtfile='scenario/5/schoollife.txt'
+    #     lines = open(static(txtfile)).readlines()
 
     bot = Bot(line=lines)
     bot.hasTense = hasTense
@@ -260,12 +257,11 @@ def fetchMessage(request):
         for x in ul_s:
             if ')' in x:
                 n_list.append(x[:x.index(')')])
-        print(n_list)
 
         if jpype.isJVMStarted():
             jpype.attachThreadToJVM()
         
-        bot.replace_pairs.extend(match_nouns(n_list, _text))
+        # bot.replace_pairs.extend(match_nouns(n_list, _text))
         
         msg, next_line = bot.next_line()
         msg = process_msg(msg, bot.tense)
@@ -343,15 +339,12 @@ def process_msg(msgs, choice):
 
 def fetchActivity(request):
     topic = request.GET.get('topic')
-    txtfile = 'scenario/' + Filename.objects.get(topic=topic+".xlsx").filename
-    lines = parser(txtfile).split('\n')
+    txtfile = Filename.objects.get(topic=topic+".xlsx").filename
+    lines = parser('scenario/' + topic[0] + '/' + txtfile + '.xlsx').split('\n')
     response = extract_vocab(txtfile=txtfile,lines=lines)
-    print("Response printing: ")
-    print(response)
     js = {'response': []}
-    random.shuffle(response['A'])
-    for v in response['A']:
-        print(v)
+    random.shuffle(response['words'])
+    for v in response['words']:
         if len(v[0])>1:
             options = set()
             options.add(v[1])
@@ -368,41 +361,6 @@ def fetchActivity(request):
                 'options': options,
                 'correct': options.index(v[1]),
             })
-    for v in response['B']:
-        if len(v[0])>1:
-            options = set()
-            options.add(v[1])
-            while len(options)<3:
-                candidate = random.choice(response['translated'])
-                if candidate != v[1]:
-                    options.add(candidate)
-            options = list(options)
-            random.shuffle(list(options))
-            js['response'].append({
-                'type': 'v',
-                'lang': 'kor',
-                'content': v[0],
-                'options': options,
-                'correct': options.index(v[1]),
-            })
-    for v in response['C']:
-        if len(v[0])>1:
-            options = set()
-            options.add(v[1])
-            while len(options)<3:
-                candidate = random.choice(response['translated'])
-                if candidate != v[1]:
-                    options.add(candidate)
-            options = list(options)
-            random.shuffle(list(options))
-            js['response'].append({
-                'type': 'v',
-                'lang': 'kor',
-                'content': v[0],
-                'options': options,
-                'correct': options.index(v[1]),
-            })
-    print(js)
     return HttpResponse(json.dumps(js), content_type="application/json")
 
 def translateToEnglish(request):

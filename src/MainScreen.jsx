@@ -21,7 +21,7 @@ class MainScreen extends React.Component {
             vocabList: [], // list of string - vocabulary list of the selected topic
             highlightList: [],
             topic: "NOT_SELECTED", // string - the selected topic / NOT_SELECTED if none of the topic is yet selected
-            topicList: ['영화관', '여행', '건강', '3급 일상생활', '3급 건강', '3급 교통', '3급 여행']
+            topicList: []
         }
         this.addVocab = this.addVocab.bind(this);
         this.onProceedHandler = this.onProceedHandler.bind(this);
@@ -61,7 +61,7 @@ class MainScreen extends React.Component {
                             {
                                 topicList.map((value)=> (
                                     <p>
-                                        <Button className="large" primary key={value} value={value} onClick={() => this.setState({topic:value})} style={{width: "150px"}}>
+                                        <Button className="large" primary key={value} value={value} onClick={() => this.setState({topic:value})} style={{width: "350px"}}>
                                             {value}
                                         </Button>
                                     </p>

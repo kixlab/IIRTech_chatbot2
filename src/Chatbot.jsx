@@ -41,14 +41,14 @@ class Chatbot extends React.Component {
   }
 
   initBot(topic) {
-    fetch(`${BASE_URL}iirtech/initializeBot?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/initializeBot?topic=${topic}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response =>this.handleInit(response));
   }
 
   // ends the session by closing the log file
   closeBot() {
-    fetch(`${BASE_URL}iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
+    fetch(`${BASE_URL}/iirtech/closeBot?userid=${this.state.userid}`, {"Access-Control-Allow-Origin":"*"})
       .then(res => res.json())
       .then(response => console.log("Close: ", response.success))
   }

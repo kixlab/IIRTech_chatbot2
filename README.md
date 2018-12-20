@@ -9,10 +9,12 @@ To run the application, you need two running shells.
   npm start
   ```
 - In the other shell (example with port 8000)
+  
+  *If you want to run on a remote server, change the BASE_URL in ./src/configs/constants.js*
   ```
   python manage.py runserver 8000
   ```
-  - If you want to run on a remote server, change the BASE_URL in ./src/configs/constants.js
+  
 
 ### React Component Sturcture
 - MainScreen

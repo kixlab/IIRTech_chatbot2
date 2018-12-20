@@ -1,0 +1,8 @@
+Log start at 2018-12-19 14:37:04.361928
+   Bot: 사용자 씨 나라는 요즘 날씨가 어때요?
+System: 경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?
+System: 네, 아니요로 답해봅시다.
+Choice: Choice Message
+System: undefined
+   Bot: 그렇을군요.
+   Bot: 예년보다 덥거나 춥지는 않을 거예요?

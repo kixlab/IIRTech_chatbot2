@@ -318,12 +318,9 @@ def run_convo():
         if line_s[0] == '#':
             continue
         if line_s[0] == '{':
-            print(line_s[1:-1])
             choice = input("Choose tense (p/f): ")
             continue
         if line_s[0] == '[':
-            print(line_s[1:-1])
-            print()
             continue
         # print(line_s[1:])
         if change:
@@ -331,11 +328,6 @@ def run_convo():
                 future = make_future_guess(line_s)
             else: #의지 미래 시제
                 future = make_future_will(line_s)
-            if choice == 'p':
-                print(make_past(line_s))
-            elif choice == 'f':
-                print(future)
-        print()
     f.close()
     return 1
 

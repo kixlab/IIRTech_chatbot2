@@ -2,7 +2,6 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 import openpyxl, os
 
 def parser(fname="scenario/L4-M99-S186-107.xlsx"):
-    print(os.getcwd())
     scenario = "./static/"+fname
     wb = openpyxl.load_workbook(scenario, read_only=True, data_only=True)
     sheet_ranges = wb['Sheet 1']
@@ -14,7 +13,7 @@ def parser(fname="scenario/L4-M99-S186-107.xlsx"):
         if idx <5:
             for cell in row:
                 if cell.value:
-                    print(cell,idx, cell.value)
+                    continue
         else:
             _type = ''
             _content = ''
@@ -25,7 +24,6 @@ def parser(fname="scenario/L4-M99-S186-107.xlsx"):
                     elif cell.column=="B":
                         _process = cell.value
                         if _process != '주제선택' and topic_selection==0:
-                            print(cell.value)
                             break
                         else:
                             topic_selection+=1
@@ -45,15 +43,11 @@ def parser(fname="scenario/L4-M99-S186-107.xlsx"):
                 else:
                     if cell.column=="B" and topic_selection<2:
                         if _process != '주제선택' and topic_selection==0:
-                            print(cell.value)
                             break
                         elif _process == '주제선택' or topic_selection<2:
-                            print(cell.value)
                             topic_selection+=1
                             break
             if _content:
                 lines = lines + _type + _content + '\n'
-                print("%s %s %s %s" %(_level, _process, _type, _content))
-    print(lines)
     return (lines.strip())
 # parser()
