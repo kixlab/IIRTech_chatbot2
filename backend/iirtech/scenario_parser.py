@@ -2,7 +2,8 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 import openpyxl, os
 
 def parser(fname="scenario/L4-M99-S186-107.xlsx"):
-    scenario = "./static/"+fname
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    scenario = BASE_DIR + "/static/"+fname
     wb = openpyxl.load_workbook(scenario, read_only=True, data_only=True)
     sheet_ranges = wb['Sheet 1']
     _level = ''
