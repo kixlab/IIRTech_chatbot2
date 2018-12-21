@@ -44,7 +44,7 @@ def extract_vocab(txtfile=static('sample_convo.txt'), lines=''):
         vocab_from_dialogue_by_level['words'].append((v.word,v.translated.lower()))
     for v in vList:
         vocab_from_dialogue_by_level['translated'].append(v.translated.lower())
-    vocab_from_dialogue_by_level['words'] = vocab_from_dialogue_by_level['words'][:5]
-    vocab_from_dialogue_by_level['translated'] = vocab_from_dialogue_by_level['translated'][:5]
+    vocab_from_dialogue_by_level['words'] = vocab_from_dialogue_by_level['words']
+    vocab_from_dialogue_by_level['translated'] = vocab_from_dialogue_by_level['translated']
     return vocab_from_dialogue_by_level
 #     print (Papago('smt',v,'ko'),v)
