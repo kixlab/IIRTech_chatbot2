@@ -175,6 +175,10 @@ class Chatbot extends React.Component {
     var highlightList =[];
     var suggestMessage = "";
 
+    if (!success) return;
+    if (!this.state.userid) this.setState({userid: userid});
+    const currBot = this;
+
     if (userline != "") {
       var line_pos=[]
       fetch(`${BASE_URL}/iirtech/getPOS?vocab=${userline}`, {"Access-Control-Allow-Origin":"*"})
@@ -201,104 +205,168 @@ class Chatbot extends React.Component {
               }
             }
           }
-          suggestMessage = suggestMessage.substring(0, suggestMessage.length-2) 
-        });
-    }
-    this.props.highlightHandler(highlightList)
+          suggestMessage = suggestMessage.substring(0, suggestMessage.length-2)
+          console.log(suggestMessage);
+          currBot.props.highlightHandler(highlightList);
 
-    if (!success) return;
-    if (!this.state.userid) this.setState({userid: userid});
-    if (type === 1) { // Exit current session and print message
-      if (original != ""){
-        this.appendMessage([
-          {
-            type: 1,
-            content: original,
-            correct: correctText,
-            errNo: errNum,
+          if (type === 1) { // Exit current session and print message
+            if (original != ""){
+              currBot.appendMessage([
+                {
+                  type: 1,
+                  content: original,
+                  correct: correctText,
+                  errNo: errNum,
+                }
+              ])
+            }
+            for(let i = 0; i < text.length; i++){
+              currBot.appendMessage([
+                {
+                  type: 0,
+                  content: text[i],
+                }
+              ])
+            }
+            currBot.appendMessage([
+              {
+                type: 2,
+                content: "잘했어요! 대화를 다시 보며 맞춤법을 확인해볼까요?",
+                format: false,
+              }
+            ])
+            currBot.setState({
+              buttonDisabled: true,
+              revise: true,
+            });
+            currBot.closeBot()
           }
-        ])
-      }
-      for(let i = 0; i < text.length; i++){
-        this.appendMessage([
-          {
-            type: 0,
-            content: text[i],
+          else {
+            if (original != ""){
+              currBot.appendMessage([
+                {
+                  type: 1,
+                  content: original,
+                  correct: correctText,
+                  errNo: errNum,
+                }
+              ])
+            }
+            for(let i = 0; i < text.length; i++){
+              currBot.appendMessage([
+                {
+                  type: type,
+                  content: text[i],
+                  format: false,
+                }
+              ])
+            }
+            if (suggestMessage != ""){
+              currBot.appendMessage([
+                {
+                  type: 2,
+                  content: suggestMessage,
+                  format: true,
+                }
+              ])
+            }
           }
-        ])
-      }
-      this.appendMessage([
-        {
-          type: 2,
-          content: "잘했어요! 대화를 다시 보며 맞춤법을 확인해볼까요?",
-          format: false,
-        }
-      ])
-      this.setState({
-        buttonDisabled: true,
-        revise: true,
-      });
-      this.closeBot()
+        });
+        
     }
-    // else if(type === 4) {
-    //   for(let i = 0; i < text.length; i++){
-    //     this.appendMessage([
-    //       {
-    //         type: 0,
-    //         content: text[i],
-    //         format: false,
-    //       }
-    //     ])
-    //   }
-    //   if(response.hasTense){
-    //     this.appendMessage([
-    //       {
-    //         type: 2,
-    //         content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
-    //         format: false,
-    //       },
-    //       {
-    //         type: 2,
-    //         content: "네, 아니요로 답해봅시다.",
-    //         format: false,
-    //       }
-    //     ])
-    //     this.appendMessage([
-    //       {
-    //         type:3,
-    //         content: "Choice Message"
-    //       }
-    //     ])
-    //   }
-    // }
-    else {
-      if (original != ""){
-        this.appendMessage([
-          {
-            type: 1,
-            content: original,
-            correct: correctText,
-            errNo: errNum,
-          }
-        ])
-      }
-      for(let i = 0; i < text.length; i++){
-        this.appendMessage([
-          {
-            type: type,
-            content: text[i],
-            format: false,
-          }
-        ])
-      }
-      if (suggestMessage != ""){
+    else{
+      if (type === 1) { // Exit current session and print message
+        if (original != ""){
+          this.appendMessage([
+            {
+              type: 1,
+              content: original,
+              correct: correctText,
+              errNo: errNum,
+            }
+          ])
+        }
+        for(let i = 0; i < text.length; i++){
+          this.appendMessage([
+            {
+              type: 0,
+              content: text[i],
+            }
+          ])
+        }
         this.appendMessage([
           {
             type: 2,
-            content: suggestMessage,
-            format: true,
+            content: "잘했어요! 대화를 다시 보며 맞춤법을 확인해볼까요?",
+            format: false,
           }
         ])
+        this.setState({
+          buttonDisabled: true,
+          revise: true,
+        });
+        this.closeBot()
+      }
+      // else if(type === 4) {
+      //   for(let i = 0; i < text.length; i++){
+      //     this.appendMessage([
+      //       {
+      //         type: 0,
+      //         content: text[i],
+      //         format: false,
+      //       }
+      //     ])
+      //   }
+      //   if(response.hasTense){
+      //     this.appendMessage([
+      //       {
+      //         type: 2,
+      //         content: "경험이 있으면 얘기해보고, 없으면 미래의 경험을 상상해 대화해볼까요?",
+      //         format: false,
+      //       },
+      //       {
+      //         type: 2,
+      //         content: "네, 아니요로 답해봅시다.",
+      //         format: false,
+      //       }
+      //     ])
+      //     this.appendMessage([
+      //       {
+      //         type:3,
+      //         content: "Choice Message"
+      //       }
+      //     ])
+      //   }
+      // }
+      else {
+        if (original != ""){
+          this.appendMessage([
+            {
+              type: 1,
+              content: original,
+              correct: correctText,
+              errNo: errNum,
+            }
+          ])
+        }
+        for(let i = 0; i < text.length; i++){
+          this.appendMessage([
+            {
+              type: type,
+              content: text[i],
+              format: false,
+            }
+          ])
+        }
+        if (suggestMessage != ""){
+          this.appendMessage([
+            {
+              type: 2,
+              content: suggestMessage,
+              format: true,
+            }
+          ])
+        }
       }
     }
   }

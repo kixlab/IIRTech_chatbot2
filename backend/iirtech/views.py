@@ -25,7 +25,7 @@ kkma = Kkma()
 def analyze_kkma(sent):
     return kkma.pos(sent)
 
-dialogueInit()
+# dialogueInit()
 
 STATIC_PATH = './backend/static/'
 
