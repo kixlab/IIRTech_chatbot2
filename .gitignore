@@ -68,4 +68,4 @@ __pycache/
 .DS_Store
 *.pyc
 *.csv
-*.sqlite3
+# *.sqlite3
